@@ -20,12 +20,18 @@ namespace MusicSharp.Game.Online
         private Thread discordThread;
 
         public event Action OnClientReady;
+        public event Action OnClientLoggedOut;
         public event Action<string> OnClientLogReceived;
-        public event Action<string> OnMessageReceived;
+        public event Action<SocketSlashCommand> OnSlashCommandExecuted;
+
+        public BindableBool IsRunning { get; private set; }
+
+        public SocketSelfUser User => client?.CurrentUser;
 
         public DiscordClient()
         {
             discordThread = createDiscordClientThread();
+            IsRunning = new BindableBool(false);
         }
 
         [BackgroundDependencyLoader]
@@ -33,10 +39,6 @@ namespace MusicSharp.Game.Online
         {
             token = localConfig.GetBindable<string>(MusicSharpSetting.Token);
 
-            client = new DiscordSocketClient();
-            client.Ready += onClientReady;
-            client.Log += onClientLogReceived;
-            client.SlashCommandExecuted += handleSlashCommand;
         }
 
         private Thread createDiscordClientThread()
@@ -58,7 +60,10 @@ namespace MusicSharp.Game.Online
         public void Start()
         {
             if (discordThread.ThreadState == ThreadState.Unstarted)
+            {
                 discordThread.Start();
+                IsRunning.Value = true;
+            }
         }
 
         public async Task Stop()
@@ -69,10 +74,17 @@ namespace MusicSharp.Game.Online
             await client.LogoutAsync();
             discordThread?.Interrupt();
             discordThread = createDiscordClientThread();
+            IsRunning.Value = false;
         }
 
         private async Task botMain()
         {
+            client = new DiscordSocketClient();
+            client.Ready += onClientReady;
+            client.LoggedOut += onClientLoggedOut;
+            client.Log += onClientLogReceived;
+            client.SlashCommandExecuted += handleSlashCommand;
+
             await client.LoginAsync(TokenType.Bot, token.Value);
             await client.StartAsync();
 
@@ -87,12 +99,19 @@ namespace MusicSharp.Game.Online
             command.WithDescription("return bot info");
 
             await client.CreateGlobalApplicationCommandAsync(command.Build());
-
             OnClientReady?.Invoke();
+        }
+
+        private Task onClientLoggedOut()
+        {
+            OnClientLoggedOut?.Invoke();
+
+            return Task.CompletedTask;
         }
 
         private async Task handleSlashCommand(SocketSlashCommand command)
         {
+            OnSlashCommandExecuted?.Invoke(command);
             Logger.Log($"Used {command.User.Username}#{command.User.Discriminator} /{command.CommandName}");
             await command.RespondAsync("Running on Discord.NET v3.6.1 (API v9)");
         }

@@ -1,4 +1,5 @@
 ﻿using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
@@ -46,7 +47,6 @@ namespace MusicSharp.Game.Graphics.UserInterface
 
         public DiscordButton()
         {
-
             Child = container = new Container
             {
                 Masking = true,
@@ -69,6 +69,7 @@ namespace MusicSharp.Game.Graphics.UserInterface
                     }
                 }
             };
+            Enabled.BindValueChanged(onEnableChanged, true);
         }
 
         [BackgroundDependencyLoader]
@@ -80,10 +81,13 @@ namespace MusicSharp.Game.Graphics.UserInterface
 
         protected override bool OnHover(HoverEvent e)
         {
-            if (LightenOnHover)
-                hover.FadeTo(0.1f, 100);
+            if (Enabled.Value)
+            {
+                if (LightenOnHover)
+                    hover.FadeTo(0.1f, 100);
 
-            background.FadeColour(hoverColour, 100);
+                background.FadeColour(hoverColour, 100);
+            }
 
             return base.OnHover(e);
         }
@@ -92,10 +96,18 @@ namespace MusicSharp.Game.Graphics.UserInterface
         {
             base.OnHoverLost(e);
 
-            if (LightenOnHover)
-                hover.FadeOut(100);
+            if (Enabled.Value)
+            {
+                if (LightenOnHover)
+                    hover.FadeOut(100);
 
-            background.FadeColour(colour, 100);
+                background.FadeColour(colour, 100);
+            }
+        }
+
+        private void onEnableChanged(ValueChangedEvent<bool> e)
+        {
+            this.FadeTo(e.NewValue ? 1 : 0.5f, 100);
         }
     }
 }

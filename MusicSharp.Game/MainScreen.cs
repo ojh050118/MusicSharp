@@ -14,8 +14,11 @@ namespace MusicSharp.Game
     {
         private DiscordClient client;
 
+        private TextButton stopButton;
+        private TextButton startButton;
+
         [BackgroundDependencyLoader]
-        private void load(DiscordColour colour)
+        private void load(DiscordColour colour, DiscordClient client)
         {
             InternalChildren = new Drawable[]
             {
@@ -47,7 +50,7 @@ namespace MusicSharp.Game
                     {
                         new Drawable[]
                         {
-                            new TextButton
+                            stopButton = new TextButton
                             {
                                 Anchor = Anchor.Centre,
                                 Origin = Anchor.Centre,
@@ -59,7 +62,7 @@ namespace MusicSharp.Game
                                 Text = "Stop",
                                 Action = stop
                             },
-                            new TextButton
+                            startButton = new TextButton
                             {
                                 Anchor = Anchor.Centre,
                                 Origin = Anchor.Centre,
@@ -74,8 +77,15 @@ namespace MusicSharp.Game
                         }
                     }
                 },
-                client = new DiscordClient()
             };
+
+            this.client = client;
+            client.IsRunning.ValueChanged += v =>
+            {
+                stopButton.Enabled.Value = v.NewValue;
+                startButton.Enabled.Value = !v.NewValue;
+            };
+            client.IsRunning.TriggerChange();
         }
 
         private void start()

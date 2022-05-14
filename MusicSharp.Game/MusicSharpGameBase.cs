@@ -1,9 +1,11 @@
 using MusicSharp.Game.Configuration;
 using MusicSharp.Game.Graphics;
+using MusicSharp.Game.Online;
 using MusicSharp.Resources;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Textures;
 using osu.Framework.IO.Stores;
 using osu.Framework.Platform;
 using osuTK;
@@ -23,6 +25,8 @@ namespace MusicSharp.Game
 
         protected Storage Storage { get; set; }
 
+        protected DiscordClient Client { get; set; }
+
         protected MusicSharpGameBase()
         {
             base.Content.Add(Content = new DrawSizePreservingFillContainer
@@ -35,6 +39,8 @@ namespace MusicSharp.Game
         private void load()
         {
             Resources.AddStore(new DllResourceStore(typeof(MusicSharpResources).Assembly));
+            var largeStore = new LargeTextureStore(Host.CreateTextureLoaderStore(new NamespacedResourceStore<byte[]>(Resources, @"Textures")));
+            largeStore.AddStore(Host.CreateTextureLoaderStore(new OnlineStore()));
 
             AddFont(Resources, @"Fonts/OpenSans-Regular");
             AddFont(Resources, @"Fonts/OpenSans-Light");
@@ -45,9 +51,13 @@ namespace MusicSharp.Game
             AddFont(Resources, @"Fonts/Noto-CJK-Basic");
             AddFont(Resources, @"Fonts/Noto-CJK-Compatibility");
 
+            dependencies.CacheAs(largeStore);
+            dependencies.CacheAs(Client = new DiscordClient());
             dependencies.CacheAs(new DiscordColour());
             dependencies.CacheAs(LocalConfig);
             dependencies.CacheAs(this);
+
+            base.Content.Add(Client);
         }
 
         public override void SetHost(GameHost host)
