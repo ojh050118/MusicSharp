@@ -1,0 +1,11 @@
+﻿{
+  "solution": {
+    "path": "MusicSharp.sln",
+    "projects": [
+      "MusicSharp.Desktop\\MusicSharp.Desktop.csproj",
+      "MusicSharp.Game\\MusicSharp.Game.csproj",
+      "MusicSharp.Game.Tests\\MusicSharp.Game.Tests.csproj",
+      "MusicSharp.Resources\\MusicSharp.Resources.csproj"
+    ]
+  }
+}
