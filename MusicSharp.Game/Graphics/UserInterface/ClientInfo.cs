@@ -18,6 +18,7 @@ namespace MusicSharp.Game.Graphics.UserInterface
         private Container content;
 
         public const float AVATAR_SIZE = 100;
+        public const float PADDING = 15;
 
         private DiscordClient client { get; set; }
 
@@ -25,6 +26,8 @@ namespace MusicSharp.Game.Graphics.UserInterface
         private void load(DiscordColour colours, DiscordClient client)
         {
             this.client = client;
+            var avatarSize = Size.Y - PADDING * 2 < AVATAR_SIZE && Size.Y - PADDING * 2 >= 0 ? Size.Y - PADDING * 2 : AVATAR_SIZE;
+            var fontSize = Size.Y - PADDING * 2 < AVATAR_SIZE && Size.Y - PADDING * 2 >= 0 ? (Size.Y - PADDING * 2) / 2.5f : AVATAR_SIZE / 2.5f;
             Children = new Drawable[]
             {
                 new Box
@@ -36,66 +39,77 @@ namespace MusicSharp.Game.Graphics.UserInterface
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
-                    Padding = new MarginPadding(10),
+                    Padding = new MarginPadding(PADDING),
                     RelativeSizeAxes = Axes.Both,
                     Masking = true,
                     Children = new Drawable[]
                     {
-                        new FillFlowContainer
+                        new GridContainer
                         {
-                            AutoSizeAxes = Axes.Both,
+                            RelativeSizeAxes = Axes.X,
+                            AutoSizeAxes = Axes.Y,
                             Anchor = Anchor.BottomLeft,
                             Origin = Anchor.BottomLeft,
-                            Direction = FillDirection.Horizontal,
-                            Spacing = new Vector2(10),
-                            Children = new Drawable[]
+                            RowDimensions = new[]
                             {
-                                new CircularContainer
+                                new Dimension(GridSizeMode.AutoSize, maxSize: avatarSize + PADDING),
+                                new Dimension(GridSizeMode.Relative),
+                            },
+                            ColumnDimensions = new[]
+                            {
+                                new Dimension(GridSizeMode.AutoSize, minSize: avatarSize + PADDING),
+                            },
+                            Content = new[]
+                            {
+                                new Drawable[]
                                 {
-                                    Anchor = Anchor.CentreLeft,
-                                    Origin = Anchor.CentreLeft,
-                                    Masking = true,
-                                    Size = new Vector2(Size.Y - 20 < AVATAR_SIZE && Size.Y - 20 >= 0 ? Size.Y - 20 : AVATAR_SIZE),
-                                    Child = new DelayedLoadWrapper(avatar = new DrawableAvatar(client.User)
+                                    new CircularContainer
                                     {
-                                        RelativeSizeAxes = Axes.Both
-                                    })
-                                    {
-                                        RelativeSizeAxes = Axes.Both
-                                    }
-                                },
-                                new GridContainer
-                                {
-                                    AutoSizeAxes = Axes.X,
-                                    RelativeSizeAxes = Axes.Y,
-                                    ColumnDimensions = new[]
-                                    {
-                                        new Dimension(GridSizeMode.AutoSize),
-                                        new Dimension(GridSizeMode.AutoSize)
+                                        Anchor = Anchor.CentreLeft,
+                                        Origin = Anchor.CentreLeft,
+                                        Masking = true,
+                                        Size = new Vector2(avatarSize),
+                                        Child = new DelayedLoadWrapper(avatar = new DrawableAvatar(client.User)
+                                        {
+                                            RelativeSizeAxes = Axes.Both
+                                        })
+                                        {
+                                            RelativeSizeAxes = Axes.Both
+                                        }
                                     },
-                                    Content = new[]
+                                    new GridContainer
                                     {
-                                        new Drawable[]
+                                        RelativeSizeAxes = Axes.Both,
+                                        ColumnDimensions = new[]
                                         {
-                                            username = new SpriteText
-                                            {
-                                                Anchor = Anchor.BottomLeft,
-                                                Origin = Anchor.BottomLeft,
-                                                Text = client.User?.Username,
-                                                Font = FontUsage.Default.With(size: Size.Y - 20 < AVATAR_SIZE && Size.Y - 20 >= 0 ? (Size.Y - 20) / 2.5f : AVATAR_SIZE / 2.5f),
-                                                Truncate = true,
-                                            }
+                                            new Dimension(GridSizeMode.Distributed)
                                         },
-                                        new Drawable[]
+                                        Content = new[]
                                         {
-                                            discriminator = new SpriteText
+                                            new Drawable[]
                                             {
-                                                Anchor = Anchor.TopLeft,
-                                                Origin = Anchor.TopLeft,
-                                                Alpha = 0.5f,
-                                                Text = $"#{client.User?.Discriminator}",
-                                                Font = FontUsage.Default.With(size: Size.Y - 20 < AVATAR_SIZE && Size.Y - 20 >= 0 ? (Size.Y - 20) / 2.5f : AVATAR_SIZE / 2.5f),
-                                                Truncate = true,
+                                                username = new SpriteText
+                                                {
+                                                    Anchor = Anchor.BottomLeft,
+                                                    Origin = Anchor.BottomLeft,
+                                                    RelativeSizeAxes = Axes.X,
+                                                    Text = client.User?.Username,
+                                                    Font = FontUsage.Default.With(size: fontSize),
+                                                    Truncate = true,
+                                                }
+                                            },
+                                            new Drawable[]
+                                            {
+                                                discriminator = new SpriteText
+                                                {
+                                                    Anchor = Anchor.TopLeft,
+                                                    Origin = Anchor.TopLeft,
+                                                    RelativeSizeAxes = Axes.X,
+                                                    Alpha = 0.5f,
+                                                    Text = $"#{client.User?.Discriminator}",
+                                                    Font = FontUsage.Default.With(size: fontSize),
+                                                    Truncate = true,
+                                                }
                                             }
                                         }
                                     }

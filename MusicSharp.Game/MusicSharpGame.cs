@@ -28,7 +28,7 @@ namespace MusicSharp.Game
                         new ClientInfo
                         {
                             RelativeSizeAxes = Axes.Y,
-                            Width = 400
+                            Width = 350
                         },
                         screenStack = new ScreenStack
                         {
