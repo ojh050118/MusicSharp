@@ -1,8 +1,8 @@
 using MusicSharp.Game.Graphics;
 using MusicSharp.Game.Graphics.UserInterface;
 using MusicSharp.Game.Online;
-using MusicSharp.Game.Overlays.Log;
-using MusicSharp.Game.Overlays.Log.Channel;
+using MusicSharp.Game.Overlays.Logging;
+using MusicSharp.Game.Overlays.Logging.Channel;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
