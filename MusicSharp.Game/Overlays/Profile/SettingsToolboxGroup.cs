@@ -20,6 +20,22 @@ namespace MusicSharp.Game.Overlays.Profile
             set => headerText.Text = value;
         }
 
+        public bool Expanded
+        {
+            get => expanded;
+            set
+            {
+                if (value)
+                    expandedIcon.Icon = FontAwesome.Solid.ChevronUp;
+                else
+                    expandedIcon.Icon = FontAwesome.Solid.ChevronDown;
+
+                expanded = value;
+            }
+        }
+
+        private bool expanded = false;
+
         private SpriteText headerText;
         private SpriteIcon expandedIcon;
 
@@ -88,6 +104,7 @@ namespace MusicSharp.Game.Overlays.Profile
                     Anchor = Anchor.BottomLeft
                 }
             };
+            Action += () => Expanded = !expanded;
         }
 
         protected override bool OnHover(HoverEvent e)
