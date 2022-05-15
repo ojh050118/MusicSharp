@@ -3,17 +3,20 @@ using osu.Framework.Graphics;
 
 namespace MusicSharp.Game.Tests.Visual.UserInterface
 {
-    public class TestSceneClientInfo : MusicSharpTestScene
+    public class TestSceneSettingsToolboxGroup : MusicSharpTestScene
     {
-        public TestSceneClientInfo()
+        public TestSceneSettingsToolboxGroup()
         {
-            Add(new ClientInfo
+            Add(new SettingsToolboxGroup
             {
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
-                RelativeSizeAxes = Axes.Y,
-                Width = 350
+                Header = "MusicSharp",
+                RelativeSizeAxes = Axes.X,
+                Height = 80
             });
         }
     }
 }
+
+

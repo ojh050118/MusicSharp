@@ -45,7 +45,8 @@ namespace MusicSharp.Game
                             {
                                 RelativeSizeAxes = Axes.X,
                                 Height = 80,
-
+                                Header = "Log",
+                                Description = "This is a discord client logging channel."
                             }
                         },
                         new Drawable[]

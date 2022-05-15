@@ -38,7 +38,6 @@ namespace MusicSharp.Game.Online
         private void load(MusicSharpConfigManager localConfig)
         {
             token = localConfig.GetBindable<string>(MusicSharpSetting.Token);
-
         }
 
         private Thread createDiscordClientThread()

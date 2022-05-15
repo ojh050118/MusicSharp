@@ -22,11 +22,17 @@ namespace MusicSharp.Game.Overlays.Logging.Channel
         public string Description
         {
             get => descriptionText.Text.ToString();
-            set => descriptionText.Text = value;
+            set
+            {
+                descriptionText.Text = value;
+                descriptionChanged(value);
+            }
         }
 
         private readonly SpriteText headerText;
         private readonly SpriteText descriptionText;
+
+        private Box box;
 
         public const float PADDING = 20;
 
@@ -37,7 +43,7 @@ namespace MusicSharp.Game.Overlays.Logging.Channel
                 Anchor = Anchor.CentreLeft,
                 Origin = Anchor.CentreLeft,
                 Margin = new MarginPadding { Left = PADDING },
-                Font = FontUsage.Default.With(family: "OpenSans-Bold", size: 24)
+                Font = FontUsage.Default.With(family: "OpenSans-Bold", size: 28)
             };
             descriptionText = new SpriteText
             {
@@ -45,7 +51,7 @@ namespace MusicSharp.Game.Overlays.Logging.Channel
                 Origin = Anchor.CentreLeft,
                 Margin = new MarginPadding { Left = PADDING },
                 Alpha = 0.5f,
-                Font = FontUsage.Default.With(size: 22)
+                Font = FontUsage.Default.With(size: 24)
             };
         }
 
@@ -87,17 +93,18 @@ namespace MusicSharp.Game.Overlays.Logging.Channel
                                     Anchor = Anchor.CentreLeft,
                                     Origin = Anchor.CentreLeft,
                                     Colour = colours.LightestGray,
-                                    Icon = FontAwesome.Regular.Comment,
+                                    Icon = FontAwesome.Solid.Hashtag,
                                     Size = new Vector2(28)
                                 },
                                 headerText,
-                                new Box
+                                box = new Box
                                 {
                                     Anchor = Anchor.CentreLeft,
                                     Origin = Anchor.CentreLeft,
                                     Margin = new MarginPadding { Left = PADDING },
                                     RelativeSizeAxes = Axes.Y,
                                     Width = 2,
+                                    Alpha = 0,
                                     Colour = colours.LightGray
                                 },
                                 descriptionText
@@ -113,6 +120,18 @@ namespace MusicSharp.Game.Overlays.Logging.Channel
                     Anchor = Anchor.BottomLeft
                 }
             };
+            descriptionChanged(descriptionText.Text.ToString());
+        }
+
+        private void descriptionChanged(string text)
+        {
+            if (box == null)
+                return;
+
+            if (string.IsNullOrEmpty(text))
+                box.Alpha = 0;
+            else
+                box.Alpha = 1;
         }
     }
 }

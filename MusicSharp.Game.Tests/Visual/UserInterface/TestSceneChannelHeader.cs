@@ -1,4 +1,4 @@
-﻿using MusicSharp.Game.Overlays.Log.Channel;
+﻿using MusicSharp.Game.Overlays.Logging.Channel;
 using osu.Framework.Graphics;
 
 namespace MusicSharp.Game.Tests.Visual.UserInterface

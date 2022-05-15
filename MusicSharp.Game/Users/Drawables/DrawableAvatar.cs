@@ -37,7 +37,7 @@ namespace MusicSharp.Game.Users.Drawables
         {
             base.LoadComplete();
 
-            this.FadeInFromZero(300, Easing.OutQuint);
+            this.FadeInFromZero(200);
         }
 
         public void UpdateAvatar(string url)
@@ -47,7 +47,7 @@ namespace MusicSharp.Game.Users.Drawables
             else
                 Texture = textures.Get("avatar-guest");
 
-            Schedule(() => this.FadeInFromZero(300, Easing.OutQuint));
+            Schedule(() => this.FadeInFromZero(200));
         }
     }
 }
