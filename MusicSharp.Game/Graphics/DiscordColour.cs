@@ -16,6 +16,8 @@ namespace MusicSharp.Game.Graphics
 
         public readonly Color4 DarkGray = new Color4(47, 49, 54, 255);
 
+        public readonly Color4 DarkerGray = new Color4(41, 43, 47, 255);
+
         public readonly Color4 DarkestGray = new Color4(30, 33, 36, 255);
     }
 }

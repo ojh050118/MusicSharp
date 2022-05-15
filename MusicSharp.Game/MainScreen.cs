@@ -24,7 +24,7 @@ namespace MusicSharp.Game
             {
                 new Box
                 {
-                    Colour = colour.LightGray,
+                    Colour = colour.Gray,
                     RelativeSizeAxes = Axes.Both,
                 },
                 new SpriteText

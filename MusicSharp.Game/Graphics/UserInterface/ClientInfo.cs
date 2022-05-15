@@ -17,7 +17,7 @@ namespace MusicSharp.Game.Graphics.UserInterface
 
         private Container content;
 
-        public const float AVATAR_SIZE = 100;
+        public const float AVATAR_SIZE = 80;
         public const float PADDING = 15;
 
         private DiscordClient client { get; set; }
@@ -39,83 +39,104 @@ namespace MusicSharp.Game.Graphics.UserInterface
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
-                    Padding = new MarginPadding(PADDING),
                     RelativeSizeAxes = Axes.Both,
                     Masking = true,
                     Children = new Drawable[]
                     {
-                        new GridContainer
+                        new Container
                         {
                             RelativeSizeAxes = Axes.X,
                             AutoSizeAxes = Axes.Y,
                             Anchor = Anchor.BottomLeft,
                             Origin = Anchor.BottomLeft,
-                            RowDimensions = new[]
+                            Children = new Drawable[]
                             {
-                                new Dimension(GridSizeMode.AutoSize, maxSize: avatarSize + PADDING),
-                                new Dimension(GridSizeMode.Relative),
-                            },
-                            ColumnDimensions = new[]
-                            {
-                                new Dimension(GridSizeMode.AutoSize, minSize: avatarSize + PADDING),
-                            },
-                            Content = new[]
-                            {
-                                new Drawable[]
+                                new Box
                                 {
-                                    new CircularContainer
+                                    RelativeSizeAxes = Axes.Both,
+                                    Colour = colours.DarkerGray
+                                },
+                                new Container
+                                {
+                                    RelativeSizeAxes = Axes.X,
+                                    AutoSizeAxes = Axes.Y,
+                                    Padding = new MarginPadding(PADDING),
+                                    Child = new GridContainer
                                     {
-                                        Anchor = Anchor.CentreLeft,
-                                        Origin = Anchor.CentreLeft,
-                                        Masking = true,
-                                        Size = new Vector2(avatarSize),
-                                        Child = new DelayedLoadWrapper(avatar = new DrawableAvatar(client.User)
+                                        RelativeSizeAxes = Axes.X,
+                                        AutoSizeAxes = Axes.Y,
+                                        Anchor = Anchor.BottomLeft,
+                                        Origin = Anchor.BottomLeft,
+                                        RowDimensions = new[]
                                         {
-                                            RelativeSizeAxes = Axes.Both
-                                        })
-                                        {
-                                            RelativeSizeAxes = Axes.Both
-                                        }
-                                    },
-                                    new GridContainer
-                                    {
-                                        RelativeSizeAxes = Axes.Both,
+                                            new Dimension(GridSizeMode.AutoSize, maxSize: avatarSize + PADDING),
+                                            new Dimension(GridSizeMode.Relative),
+                                        },
                                         ColumnDimensions = new[]
                                         {
-                                            new Dimension(GridSizeMode.Distributed)
+                                            new Dimension(GridSizeMode.AutoSize, minSize: avatarSize + PADDING),
                                         },
                                         Content = new[]
                                         {
                                             new Drawable[]
                                             {
-                                                username = new SpriteText
+                                                new CircularContainer
                                                 {
-                                                    Anchor = Anchor.BottomLeft,
-                                                    Origin = Anchor.BottomLeft,
-                                                    RelativeSizeAxes = Axes.X,
-                                                    Text = client.User?.Username,
-                                                    Font = FontUsage.Default.With(size: fontSize),
-                                                    Truncate = true,
-                                                }
-                                            },
-                                            new Drawable[]
-                                            {
-                                                discriminator = new SpriteText
+                                                    Anchor = Anchor.CentreLeft,
+                                                    Origin = Anchor.CentreLeft,
+                                                    Masking = true,
+                                                    Size = new Vector2(avatarSize),
+                                                    Child = new DelayedLoadWrapper(avatar = new DrawableAvatar(client.User)
+                                                    {
+                                                        RelativeSizeAxes = Axes.Both
+                                                    })
+                                                    {
+                                                        RelativeSizeAxes = Axes.Both
+                                                    }
+                                                },
+                                                new GridContainer
                                                 {
-                                                    Anchor = Anchor.TopLeft,
-                                                    Origin = Anchor.TopLeft,
-                                                    RelativeSizeAxes = Axes.X,
-                                                    Alpha = 0.5f,
-                                                    Text = $"#{client.User?.Discriminator}",
-                                                    Font = FontUsage.Default.With(size: fontSize),
-                                                    Truncate = true,
+                                                    RelativeSizeAxes = Axes.Both,
+                                                    ColumnDimensions = new[]
+                                                    {
+                                                        new Dimension(GridSizeMode.Distributed)
+                                                    },
+                                                    Content = new[]
+                                                    {
+                                                        new Drawable[]
+                                                        {
+                                                            username = new SpriteText
+                                                            {
+                                                                Anchor = Anchor.BottomLeft,
+                                                                Origin = Anchor.BottomLeft,
+                                                                RelativeSizeAxes = Axes.X,
+                                                                Text = client.User?.Username,
+                                                                Font = FontUsage.Default.With(size: fontSize),
+                                                                Truncate = true,
+                                                            }
+                                                        },
+                                                        new Drawable[]
+                                                        {
+                                                            discriminator = new SpriteText
+                                                            {
+                                                                Anchor = Anchor.TopLeft,
+                                                                Origin = Anchor.TopLeft,
+                                                                RelativeSizeAxes = Axes.X,
+                                                                Alpha = 0.5f,
+                                                                Text = $"#{client.User?.Discriminator}",
+                                                                Font = FontUsage.Default.With(size: fontSize),
+                                                                Truncate = true,
+                                                            }
+                                                        }
+                                                    }
                                                 }
                                             }
                                         }
                                     }
                                 }
+                                
                             }
-                        },
+                        }
                     }
                 }
             };
