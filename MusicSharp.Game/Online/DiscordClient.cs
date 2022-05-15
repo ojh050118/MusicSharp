@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
+using MusicSharp.Game.Commands;
 using MusicSharp.Game.Configuration;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
@@ -28,10 +30,13 @@ namespace MusicSharp.Game.Online
 
         public SocketSelfUser User => client?.CurrentUser;
 
+        private CommandStore commands;
+
         public DiscordClient()
         {
             discordThread = createDiscordClientThread();
             IsRunning = new BindableBool(false);
+            commands = new CommandStore();
         }
 
         [BackgroundDependencyLoader]
@@ -94,10 +99,9 @@ namespace MusicSharp.Game.Online
         {
             var command = new SlashCommandBuilder();
 
-            command.WithName("info");
-            command.WithDescription("return bot info");
+            foreach (var c in commands.GetBuildedCommands())
+                await client.CreateGlobalApplicationCommandAsync(c);
 
-            await client.CreateGlobalApplicationCommandAsync(command.Build());
             OnClientReady?.Invoke();
         }
 
@@ -110,15 +114,22 @@ namespace MusicSharp.Game.Online
 
         private async Task handleSlashCommand(SocketSlashCommand command)
         {
-            OnSlashCommandExecuted?.Invoke(command);
+            var cmd = commands.GetCommands().FirstOrDefault(c => c.Name == command.CommandName);
+
+            if (cmd != null)
+                await cmd.ExecutedCommand(command);
+
             Logger.Log($"Used {command.User.Username}#{command.User.Discriminator} /{command.CommandName}");
-            await command.RespondAsync("Running on Discord.NET v3.6.1 (API v9)");
+            OnSlashCommandExecuted?.Invoke(command);
         }
 
         private Task onClientLogReceived(LogMessage log)
         {
             OnClientLogReceived?.Invoke(log);
             Logger.Log($"[{log.Source}]: {log.Message}");
+
+            if (log.Exception != null)
+                Logger.Log(log.Exception.ToString());
 
             return Task.CompletedTask;
         }

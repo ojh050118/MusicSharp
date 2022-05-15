@@ -36,6 +36,18 @@ namespace MusicSharp.Game.Overlays.Logging
                     AllowMultiline = true,
                     Font = FontUsage.Default.With(size: 28)
                 });
+
+                if (log.Exception != null)
+                {
+                    messageContent.Add(new SpriteText
+                    {
+                        RelativeSizeAxes = Axes.X,
+                        Text = $"[Error]: {log.Exception.Message}",
+                        AllowMultiline = true,
+                        Font = FontUsage.Default.With(size: 28)
+                    });
+                }
+
                 Scheduler.AddDelayed(() => ScrollToEnd(), 100);
             });
         }
