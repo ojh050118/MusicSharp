@@ -1,11 +1,9 @@
 ﻿using osu.Framework.Allocation;
-using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Events;
 using osuTK;
-using osuTK.Graphics;
 using osuTK.Input;
 
 namespace MusicSharp.Game.Graphics.Containers
@@ -96,20 +94,16 @@ namespace MusicSharp.Game.Graphics.Containers
             base.OnDragEnd(e);
         }
 
-        protected override ScrollbarContainer CreateScrollbar(Direction direction) => new CircleScrollbar(direction);
+        protected override ScrollbarContainer CreateScrollbar(Direction direction) => new MusicSharpScrollbar(direction);
 
-        protected class CircleScrollbar : ScrollbarContainer
+        protected class MusicSharpScrollbar : ScrollbarContainer
         {
-            private Color4 hoverColour;
-            private Color4 defaultColour;
-            private Color4 highlightColour;
-
             private readonly Box box;
 
-            public CircleScrollbar(Direction scrollDir)
+            public MusicSharpScrollbar(Direction scrollDir)
                 : base(scrollDir)
             {
-                Blending = BlendingParameters.Additive;
+                //Blending = BlendingParameters.Additive;
 
                 CornerRadius = 5;
 
@@ -133,9 +127,7 @@ namespace MusicSharp.Game.Graphics.Containers
             [BackgroundDependencyLoader]
             private void load(DiscordColour colours)
             {
-                Colour = defaultColour = colours.DarkestGray;
-                hoverColour = colours.DarkestGray;
-                highlightColour = colours.DarkerGray;
+                box.Colour = colours.DarkestGray;
             }
 
             public override void ResizeTo(float val, int duration = 0, Easing easing = Easing.None)
@@ -147,31 +139,16 @@ namespace MusicSharp.Game.Graphics.Containers
                 this.ResizeTo(size, duration, easing);
             }
 
-            protected override bool OnHover(HoverEvent e)
-            {
-                this.FadeColour(hoverColour, 100);
-                return true;
-            }
-
-            protected override void OnHoverLost(HoverLostEvent e)
-            {
-                this.FadeColour(defaultColour, 200);
-            }
-
             protected override bool OnMouseDown(MouseDownEvent e)
             {
                 if (!base.OnMouseDown(e)) return false;
 
-                // note that we are changing the colour of the box here as to not interfere with the hover effect.
-                box.FadeColour(highlightColour, 100);
                 return true;
             }
 
             protected override void OnMouseUp(MouseUpEvent e)
             {
                 if (e.Button != MouseButton.Left) return;
-
-                box.FadeColour(Color4.White, 200);
 
                 base.OnMouseUp(e);
             }

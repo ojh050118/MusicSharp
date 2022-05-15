@@ -21,7 +21,7 @@ namespace MusicSharp.Game.Online
 
         public event Action OnClientReady;
         public event Action OnClientLoggedOut;
-        public event Action<string> OnClientLogReceived;
+        public event Action<LogMessage> OnClientLogReceived;
         public event Action<SocketSlashCommand> OnSlashCommandExecuted;
 
         public BindableBool IsRunning { get; private set; }
@@ -118,8 +118,8 @@ namespace MusicSharp.Game.Online
 
         private Task onClientLogReceived(LogMessage log)
         {
-            OnClientLogReceived?.Invoke(log.Message);
-            Logger.Log(log.Message);
+            OnClientLogReceived?.Invoke(log);
+            Logger.Log($"[{log.Source}]: {log.Message}");
 
             return Task.CompletedTask;
         }

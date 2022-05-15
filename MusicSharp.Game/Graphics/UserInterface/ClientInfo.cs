@@ -17,7 +17,7 @@ namespace MusicSharp.Game.Graphics.UserInterface
 
         private Container content;
 
-        public const float AVATAR_SIZE = 80;
+        public const float AVATAR_SIZE = 50;
         public const float PADDING = 15;
 
         private DiscordClient client { get; set; }
@@ -111,7 +111,7 @@ namespace MusicSharp.Game.Graphics.UserInterface
                                                                 Origin = Anchor.BottomLeft,
                                                                 RelativeSizeAxes = Axes.X,
                                                                 Text = client.User?.Username,
-                                                                Font = FontUsage.Default.With(size: fontSize),
+                                                                Font = FontUsage.Default.With(family: "OpenSans-Bold", size: fontSize),
                                                                 Truncate = true,
                                                             }
                                                         },

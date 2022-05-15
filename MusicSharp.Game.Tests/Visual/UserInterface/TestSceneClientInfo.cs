@@ -1,7 +1,5 @@
 ﻿using MusicSharp.Game.Graphics.UserInterface;
 using osu.Framework.Graphics;
-using osuTK;
-using osuTK.Graphics;
 
 namespace MusicSharp.Game.Tests.Visual.UserInterface
 {
@@ -13,7 +11,8 @@ namespace MusicSharp.Game.Tests.Visual.UserInterface
             {
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
-                Size = new Vector2(400, 100)
+                RelativeSizeAxes = Axes.X,
+                Height = 80
             });
         }
     }
