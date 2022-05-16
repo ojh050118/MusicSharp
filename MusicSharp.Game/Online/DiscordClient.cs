@@ -97,10 +97,23 @@ namespace MusicSharp.Game.Online
 
         private async Task onClientReady()
         {
-            var command = new SlashCommandBuilder();
+            foreach (var command in commands.GetCommands())
+            {
+                var buildedCommand = command.Build();
 
-            foreach (var c in commands.GetBuildedCommands())
-                await client.CreateGlobalApplicationCommandAsync(c);
+                if (command.IsGlobalAppCommand)
+                {
+                    await client.CreateGlobalApplicationCommandAsync(buildedCommand);
+                }
+                else
+                {
+                    foreach (var guildId in command.SpecificGuilds)
+                    {
+                        var guild = client.GetGuild(guildId);
+                        await guild.CreateApplicationCommandAsync(buildedCommand);
+                    }
+                }    
+            }
 
             OnClientReady?.Invoke();
         }

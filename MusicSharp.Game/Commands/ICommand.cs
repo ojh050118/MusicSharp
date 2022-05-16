@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MusicSharp.Game.Commands
 {
@@ -7,5 +8,9 @@ namespace MusicSharp.Game.Commands
         string Name { get; }
 
         string Description { get; }
+
+        bool IsGlobalAppCommand { get; }
+
+        IReadOnlyList<ulong> SpecificGuilds { get; }
     }
 }

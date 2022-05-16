@@ -13,6 +13,7 @@ namespace MusicSharp.Game.Commands
                 new CommandTestOptions(),
             };
         }
+
         public IEnumerable<SlashCommandProperties> GetBuildedCommands()
         {
 

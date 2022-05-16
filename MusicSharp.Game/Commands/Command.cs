@@ -13,6 +13,10 @@ namespace MusicSharp.Game.Commands
 
         public new abstract string Description { get; }
 
+        public virtual bool IsGlobalAppCommand { get; } = true;
+
+        public virtual IReadOnlyList<ulong> SpecificGuilds { get; }
+
         public new virtual IReadOnlyList<SlashCommandOptionBuilder> Options { get; } = new List<SlashCommandOptionBuilder>();
 
         public Command()
