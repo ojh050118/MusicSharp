@@ -13,12 +13,18 @@ namespace MusicSharp.Game.Commands
 
         public new abstract string Description { get; }
 
+        /// <summary>
+        /// 이 명령어가 전역 명령어인지 여부. 기본 값은 <see cref="true"/>입니다.
+        /// </summary>
         public virtual bool IsGlobalAppCommand { get; } = true;
 
         public virtual IReadOnlyList<ulong> SpecificGuilds { get; }
 
         public new virtual IReadOnlyList<SlashCommandOptionBuilder> Options { get; } = new List<SlashCommandOptionBuilder>();
 
+        /// <summary>
+        /// 새로운 객체를 만듭니다.
+        /// </summary>
         public Command()
         {
             base.Name = Name;
