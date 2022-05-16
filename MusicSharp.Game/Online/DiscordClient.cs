@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -97,9 +98,12 @@ namespace MusicSharp.Game.Online
 
         private async Task onClientReady()
         {
+            var appCommandProperties = new List<ApplicationCommandProperties>();
+
             foreach (var command in commands.GetCommands())
             {
                 var buildedCommand = command.Build();
+                appCommandProperties.Add(buildedCommand);
 
                 if (command.IsGlobalAppCommand)
                 {
@@ -115,6 +119,7 @@ namespace MusicSharp.Game.Online
                 }    
             }
 
+            await client.BulkOverwriteGlobalApplicationCommandsAsync(appCommandProperties.ToArray());
             OnClientReady?.Invoke();
         }
 
