@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Discord;
+﻿using System.Threading.Tasks;
 using Discord.WebSocket;
 
 namespace MusicSharp.Game.Commands

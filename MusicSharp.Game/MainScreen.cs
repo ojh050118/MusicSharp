@@ -2,7 +2,6 @@ using MusicSharp.Game.Graphics;
 using MusicSharp.Game.Graphics.UserInterface;
 using MusicSharp.Game.Online;
 using MusicSharp.Game.Overlays.Logging;
-using MusicSharp.Game.Overlays.Logging.Channel;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -33,28 +32,19 @@ namespace MusicSharp.Game
                     RelativeSizeAxes = Axes.Both,
                     RowDimensions = new[]
                     {
-                        new Dimension(GridSizeMode.AutoSize),
-                        new Dimension(GridSizeMode.Distributed),
+                        new Dimension(),
                         new Dimension(GridSizeMode.AutoSize),
                     },
                     Content = new[]
                     {
                         new Drawable[]
                         {
-                            new ChannelHeader
+                            new LoggingChannel
                             {
-                                RelativeSizeAxes = Axes.X,
-                                Height = 80,
-                                Header = "Log",
+                                RelativeSizeAxes = Axes.Both,
+                                ChannelName = "Log",
                                 Description = "This is a discord client logging channel."
                             }
-                        },
-                        new Drawable[]
-                        {
-                            new LogScrollContainer
-                            {
-                                RelativeSizeAxes = Axes.Both
-                            },
                         },
                         new Drawable[]
                         {

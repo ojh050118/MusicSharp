@@ -143,6 +143,9 @@ namespace MusicSharp.Game.Online
 
         private Task onClientLogReceived(LogMessage log)
         {
+            if (string.IsNullOrEmpty(log.Message))
+                return Task.CompletedTask;
+
             OnClientLogReceived?.Invoke(log);
             Logger.Log($"[{log.Source}]: {log.Message}");
 

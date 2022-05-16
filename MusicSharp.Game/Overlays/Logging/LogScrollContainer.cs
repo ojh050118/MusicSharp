@@ -1,10 +1,8 @@
-﻿using Discord;
-using MusicSharp.Game.Graphics.Containers;
+﻿using MusicSharp.Game.Graphics.Containers;
 using MusicSharp.Game.Online;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Sprites;
 
 namespace MusicSharp.Game.Overlays.Logging
 {
@@ -20,33 +18,19 @@ namespace MusicSharp.Game.Overlays.Logging
                 Direction = FillDirection.Vertical,
                 AutoSizeAxes = Axes.Y,
                 RelativeSizeAxes = Axes.X,
-                Padding = new MarginPadding(20)
+                Padding = new MarginPadding { Vertical = 16, Right = 16 },
             };
             client.OnClientLogReceived += addLog;
         }
 
-        private void addLog(LogMessage log)
+        private void addLog(Discord.LogMessage log)
         {
             Schedule(() =>
             {
-                messageContent.Add(new SpriteText
-                {
-                    RelativeSizeAxes = Axes.X,
-                    Text = $"[{log.Source}]: {log.Message}",
-                    AllowMultiline = true,
-                    Font = FontUsage.Default.With(size: 28)
-                });
+                messageContent.Add(new LogLine(new LogMessage(log.Message)));
 
                 if (log.Exception != null)
-                {
-                    messageContent.Add(new SpriteText
-                    {
-                        RelativeSizeAxes = Axes.X,
-                        Text = $"[Error]: {log.Exception.Message}",
-                        AllowMultiline = true,
-                        Font = FontUsage.Default.With(size: 28)
-                    });
-                }
+                    messageContent.Add(new LogLine(new LogMessage(log.Exception.Message)));
 
                 Scheduler.AddDelayed(() => ScrollToEnd(), 100);
             });
