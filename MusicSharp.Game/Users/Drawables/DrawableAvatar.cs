@@ -1,8 +1,10 @@
-﻿using Discord.WebSocket;
+﻿using System.IO;
+using Discord.WebSocket;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
+using osu.Framework.Utils;
 
 namespace MusicSharp.Game.Users.Drawables
 {
@@ -10,6 +12,8 @@ namespace MusicSharp.Game.Users.Drawables
     public class DrawableAvatar : Sprite
     {
         private SocketUser user;
+
+        public const string AVATAR_URL = @"https://cdn.discordapp.com/embed/avatars/";
 
         [Resolved]
         private LargeTextureStore textures { get; set; }
@@ -30,7 +34,7 @@ namespace MusicSharp.Game.Users.Drawables
             if (user != null)
                 Texture = textures.Get(user.GetAvatarUrl());
 
-            Texture ??= textures.Get("avatar-guest");
+            Texture ??= textures.Get(Path.Combine(AVATAR_URL, $"{RNG.Next(6)}.png"));
         }
 
         protected override void LoadComplete()
@@ -45,7 +49,7 @@ namespace MusicSharp.Game.Users.Drawables
             if (!string.IsNullOrEmpty(url))
                 Texture = textures.Get(url);
             else
-                Texture = textures.Get("avatar-guest");
+                Texture = textures.Get(Path.Combine(AVATAR_URL, $"{RNG.Next(6)}.png"));
 
             Schedule(() => this.FadeInFromZero(200));
         }
