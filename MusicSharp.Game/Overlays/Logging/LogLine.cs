@@ -29,11 +29,10 @@ namespace MusicSharp.Game.Overlays.Logging
                 RowDimensions = new[]
                 {
                     new Dimension(GridSizeMode.AutoSize),
-                    new Dimension(GridSizeMode.AutoSize)
                 },
                 ColumnDimensions = new[]
                 {
-                    new Dimension(GridSizeMode.AutoSize, minSize: MARGIN),
+                    new Dimension(GridSizeMode.AutoSize, minSize: LEFT_CONTENT_SIZE)
                 },
                 Content = new[]
                 {
@@ -41,14 +40,17 @@ namespace MusicSharp.Game.Overlays.Logging
                     {
                         createdTime = new SpriteText
                         {
+                            Anchor = Anchor.TopCentre,
+                            Origin = Anchor.TopCentre,
                             Alpha = 0,
-                            Padding = new MarginPadding { Vertical = 2 },
                             Colour = colours.LightestGray,
+                            Margin = new MarginPadding { Vertical = 2 },
                             Font = FontUsage.Default.With(size: 24),
                             Text = Message.CreatedTime.ToString("tt h:mm")
                         },
                         messageContent = new TextFlowContainer(t => t.Font = FontUsage.Default.With(size: 28))
                         {
+                            Padding = new MarginPadding { Left = PADDING },
                             RelativeSizeAxes = Axes.X,
                             AutoSizeAxes = Axes.Y,
                         }

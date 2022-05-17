@@ -11,6 +11,7 @@ namespace MusicSharp.Game.Overlays.Logging
     {
         public const float MARGIN = 100;
         public const float PADDING = 20;
+        public const int LEFT_CONTENT_SIZE = 72;
 
         public LogMessage Message
         {

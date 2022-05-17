@@ -30,12 +30,10 @@ namespace MusicSharp.Game.Overlays.Logging
                 RowDimensions = new[]
                 {
                     new Dimension(GridSizeMode.AutoSize),
-                    new Dimension(GridSizeMode.AutoSize),
-                    new Dimension(GridSizeMode.AutoSize)
                 },
                 ColumnDimensions = new[]
                 {
-                    new Dimension(GridSizeMode.AutoSize, minSize: MARGIN),
+                    new Dimension(GridSizeMode.AutoSize, minSize: LEFT_CONTENT_SIZE),
                 },
                 Content = new[]
                 {
@@ -43,8 +41,10 @@ namespace MusicSharp.Game.Overlays.Logging
                     {
                         new Container
                         {
+                            Anchor = Anchor.TopCentre,
+                            Origin = Anchor.TopCentre,
                             Size = new Vector2(56),
-                            Padding = new MarginPadding { Vertical = 4, Right = 8 },
+                            Padding = new MarginPadding(4),
                             Child = new CircularContainer
                             {
                                 RelativeSizeAxes = Axes.Both,
@@ -58,61 +58,75 @@ namespace MusicSharp.Game.Overlays.Logging
                                 }
                             }
                         },
-                        new GridContainer
+                        new Container
                         {
                             RelativeSizeAxes = Axes.X,
                             AutoSizeAxes = Axes.Y,
-                            ColumnDimensions = new[]
+                            Padding = new MarginPadding { Left = PADDING },
+                            Child = new GridContainer
                             {
-                                new Dimension(GridSizeMode.Distributed),
-                                new Dimension(GridSizeMode.AutoSize)
-                            },
-                            RowDimensions = new[]
-                            {
-                                new Dimension(GridSizeMode.AutoSize),
-                                new Dimension(GridSizeMode.AutoSize)
-                            },
-                            Content = new[]
-                            {
-                                new Drawable[]
+                                RelativeSizeAxes = Axes.X,
+                                AutoSizeAxes = Axes.Y,
+                                ColumnDimensions = new[]
                                 {
-                                    new FillFlowContainer
+                                    new Dimension(GridSizeMode.Distributed),
+                                    new Dimension(GridSizeMode.AutoSize)
+                                },
+                                RowDimensions = new[]
+                                {
+                                    new Dimension(GridSizeMode.AutoSize),
+                                    new Dimension(GridSizeMode.AutoSize)
+                                },
+                                Content = new[]
+                                {
+                                    new Drawable[]
                                     {
-                                        RelativeSizeAxes = Axes.X,
-                                        AutoSizeAxes = Axes.Y,
-                                        Direction = FillDirection.Horizontal,
-                                        Spacing = new Vector2(10),
-                                        Children = new Drawable[]
+                                        new GridContainer
                                         {
-                                            new SpriteText
+                                            RelativeSizeAxes = Axes.X,
+                                            AutoSizeAxes = Axes.Y,
+                                            ColumnDimensions = new[]
                                             {
-                                                Anchor = Anchor.CentreLeft,
-                                                Origin = Anchor.CentreLeft,
-                                                Padding = new MarginPadding { Vertical = 2 },
-                                                Font = FontUsage.Default.With(family: "OpenSans-Bold", size: 24),
-                                                Text = "Discord"
+                                                new Dimension(GridSizeMode.AutoSize),
+                                                new Dimension(GridSizeMode.AutoSize),
                                             },
-                                            new SpriteText
+                                            RowDimensions = new[]
                                             {
-                                                Anchor = Anchor.CentreLeft,
-                                                Origin = Anchor.CentreLeft,
-                                                Padding = new MarginPadding { Vertical = 2 },
-                                                Colour = colours.LightestGray,
-                                                Font = FontUsage.Default.With(size: 24),
-                                                Text = Message.CreatedTime.ToString("tt h:mm")
+                                                new Dimension(GridSizeMode.AutoSize)
+                                            },
+                                            Content = new[]
+                                            {
+                                                new Drawable[]
+                                                {
+                                                    new SpriteText
+                                                    {
+                                                        Anchor = Anchor.CentreLeft,
+                                                        Origin = Anchor.CentreLeft,
+                                                        Font = FontUsage.Default.With(family: "OpenSans-Bold", size: 28),
+                                                        Text = "Discord"
+                                                    },
+                                                    new SpriteText
+                                                    {
+                                                        Anchor = Anchor.CentreLeft,
+                                                        Origin = Anchor.CentreLeft,
+                                                        Colour = colours.LightestGray,
+                                                        Margin = new MarginPadding { Left = 10 },
+                                                        Font = FontUsage.Default.With(size: 24),
+                                                        Text = Message.CreatedTime.ToString("tt h:mm")
+                                                    }
+                                                }
                                             }
                                         }
-                                    }
-
-                                },
-                                new Drawable[]
-                                {
-                                    messageContent = new TextFlowContainer(t => t.Font = FontUsage.Default.With(size: 28))
+                                    },
+                                    new Drawable[]
                                     {
-                                        Anchor = Anchor.CentreLeft,
-                                        Origin = Anchor.CentreLeft,
-                                        RelativeSizeAxes = Axes.X,
-                                        AutoSizeAxes = Axes.Y,
+                                        messageContent = new TextFlowContainer(t => t.Font = FontUsage.Default.With(size: 28))
+                                        {
+                                            Anchor = Anchor.CentreLeft,
+                                            Origin = Anchor.CentreLeft,
+                                            RelativeSizeAxes = Axes.X,
+                                            AutoSizeAxes = Axes.Y,
+                                        }
                                     }
                                 }
                             }
