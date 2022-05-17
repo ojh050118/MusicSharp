@@ -1,4 +1,5 @@
-﻿using MusicSharp.Game.Graphics.Containers;
+﻿using System;
+using MusicSharp.Game.Graphics.Containers;
 using MusicSharp.Game.Online;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
@@ -9,6 +10,8 @@ namespace MusicSharp.Game.Overlays.Logging
     public class LogScrollContainer : MusicSharpScrollContainer
     {
         private FillFlowContainer messageContent;
+
+        private LogLineContainer lastLog;
 
         [BackgroundDependencyLoader]
         private void load(DiscordClient client)
@@ -27,7 +30,13 @@ namespace MusicSharp.Game.Overlays.Logging
         {
             Schedule(() =>
             {
-                messageContent.Add(new LogLine(new LogMessage(log.Message)));
+                if (lastLog == null || (DateTime.Now - lastLog.Message.CreatedTime).Seconds > 420)
+                    messageContent.Add(lastLog = new LogLineHeader(new LogMessage(log.Message))
+                    {
+                        Margin = new MarginPadding { Top = lastLog == null ? 0 : 28 }
+                    });
+                else
+                    messageContent.Add(lastLog = new LogLine(new LogMessage(log.Message)));
 
                 if (log.Exception != null)
                     messageContent.Add(new LogLine(new LogMessage(log.Exception.Message)));

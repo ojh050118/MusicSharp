@@ -34,7 +34,7 @@ namespace MusicSharp.Game.Users.Drawables
             if (user != null)
                 Texture = textures.Get(user.GetAvatarUrl());
 
-            Texture ??= textures.Get(Path.Combine(AVATAR_URL, $"{RNG.Next(6)}.png"));
+            Texture ??= textures.Get(Path.Combine(AVATAR_URL, $"{RNG.Next(1, 6)}.png"));
         }
 
         protected override void LoadComplete()
@@ -49,7 +49,7 @@ namespace MusicSharp.Game.Users.Drawables
             if (!string.IsNullOrEmpty(url))
                 Texture = textures.Get(url);
             else
-                Texture = textures.Get(Path.Combine(AVATAR_URL, $"{RNG.Next(6)}.png"));
+                Texture = textures.Get(Path.Combine(AVATAR_URL, $"{RNG.Next(1, 6)}.png"));
 
             Schedule(() => this.FadeInFromZero(200));
         }

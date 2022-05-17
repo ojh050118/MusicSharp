@@ -70,9 +70,10 @@ namespace MusicSharp.Game
 
         protected override void Dispose(bool isDisposing)
         {
-            base.Dispose(isDisposing);
-
             LocalConfig?.Dispose();
+            Client?.Stop();
+
+            base.Dispose(isDisposing);
         }
     }
 }

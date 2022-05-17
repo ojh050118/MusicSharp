@@ -2,38 +2,15 @@
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Events;
 
 namespace MusicSharp.Game.Overlays.Logging
 {
-    public class LogLine : Container
+    public class LogLine : LogLineContainer
     {
-        public const float MARGIN = 100;
-        public const float PADDING = 20;
-
-        public LogMessage Message
-        {
-            get => message;
-            set
-            {
-                message = value;
-
-                if (!IsLoaded)
-                    return;
-
-                updateMessageContent();
-            }
-        }
-
-        private LogMessage message;
-
-        private Box background;
         private TextFlowContainer messageContent;
-
-        [Resolved]
-        private DiscordColour colours { get; set; }
+        private SpriteText createdTime;
 
         public LogLine(LogMessage message)
         {
@@ -45,66 +22,44 @@ namespace MusicSharp.Game.Overlays.Logging
         [BackgroundDependencyLoader]
         private void load(DiscordColour colours)
         {
-            Children = new Drawable[]
+            Content.Child = new GridContainer
             {
-                background = new Box
+                RelativeSizeAxes = Axes.X,
+                AutoSizeAxes = Axes.Y,
+                RowDimensions = new[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = colours.Gray
+                    new Dimension(GridSizeMode.AutoSize),
+                    new Dimension(GridSizeMode.AutoSize)
                 },
-                new Container
+                ColumnDimensions = new[]
                 {
-                    RelativeSizeAxes = Axes.X,
-                    AutoSizeAxes = Axes.Y,
-                    Padding = new MarginPadding { Left = PADDING, Right = MARGIN + PADDING },
-                    Child = new GridContainer
+                    new Dimension(GridSizeMode.AutoSize, minSize: MARGIN),
+                },
+                Content = new[]
+                {
+                    new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y,
-                        RowDimensions = new[]
+                        createdTime = new SpriteText
                         {
-                            new Dimension(GridSizeMode.AutoSize),
-                            new Dimension(GridSizeMode.AutoSize)
+                            Alpha = 0,
+                            Padding = new MarginPadding { Vertical = 2 },
+                            Colour = colours.LightestGray,
+                            Font = FontUsage.Default.With(size: 24),
+                            Text = Message.CreatedTime.ToString("tt h:mm")
                         },
-                        ColumnDimensions = new[]
+                        messageContent = new TextFlowContainer(t => t.Font = FontUsage.Default.With(size: 28))
                         {
-                            new Dimension(GridSizeMode.AutoSize, minSize: MARGIN),
-                        },
-                        Content = new[]
-                        {
-                            new Drawable[]
-                            {
-                                new SpriteText
-                                {
-                                    //Anchor = Anchor.CentreLeft,
-                                    //Origin = Anchor.CentreLeft,
-                                    Padding = new MarginPadding { Vertical = 2 },
-                                    Colour = colours.LightestGray,
-                                    Font = FontUsage.Default.With(size: 24),
-                                    Text = message.CreatedTime.ToString("tt h:mm")
-                                },
-                                messageContent = new TextFlowContainer(t => t.Font = FontUsage.Default.With(size: 28))
-                                {
-                                    RelativeSizeAxes = Axes.X,
-                                    AutoSizeAxes = Axes.Y,
-                                }
-                            }
+                            RelativeSizeAxes = Axes.X,
+                            AutoSizeAxes = Axes.Y,
                         }
                     }
                 }
             };
         }
 
-        protected override void LoadComplete()
-        {
-            base.LoadComplete();
-
-            updateMessageContent();
-        }
-
         protected override bool OnHover(HoverEvent e)
         {
-            background.FadeColour(colours.DarkGray);
+            createdTime.Alpha = 1;
 
             return base.OnHover(e);
         }
@@ -113,9 +68,9 @@ namespace MusicSharp.Game.Overlays.Logging
         {
             base.OnHoverLost(e);
 
-            background.FadeColour(colours.Gray);
+            createdTime.Alpha = 0;
         }
 
-        private void updateMessageContent() => messageContent.Text = message?.Message;
+        protected override void UpdateMessageContent() => messageContent.Text = Message?.Message;
     }
 }
