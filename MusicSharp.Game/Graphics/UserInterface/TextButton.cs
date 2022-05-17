@@ -1,4 +1,5 @@
-﻿using osu.Framework.Graphics;
+﻿using osu.Framework.Allocation;
+using osu.Framework.Graphics;
 using osu.Framework.Graphics.Sprites;
 
 namespace MusicSharp.Game.Graphics.UserInterface
@@ -7,21 +8,39 @@ namespace MusicSharp.Game.Graphics.UserInterface
     {
         public string Text
         {
-            get => text.Text.ToString();
-            set => text.Text = value;
+            get => text;
+            set
+            {
+                text = value;
+
+                if (!IsLoaded)
+                    return;
+
+                UpdateContent();
+            }
         }
 
-        private SpriteText text;
+        private string text;
 
-        public TextButton()
+        private SpriteText buttonText;
+
+        [BackgroundDependencyLoader]
+        private void load()
         {
-            Content.Add(text = new SpriteText
+            Content.Add(buttonText = new SpriteText
             {
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
                 Font = FontUsage.Default.With(size: 28),
                 Truncate = true,
             });
+        }
+
+        protected override void UpdateContent()
+        {
+            base.UpdateContent();
+
+            buttonText.Text = text;
         }
     }
 }

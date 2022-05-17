@@ -1,6 +1,7 @@
 ﻿using MusicSharp.Game.Graphics;
 using MusicSharp.Game.Graphics.Containers;
 using MusicSharp.Game.Online;
+using MusicSharp.Game.Overlays.Logging.Channel;
 using MusicSharp.Game.Users.Drawables;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
@@ -44,7 +45,17 @@ namespace MusicSharp.Game.Overlays.Profile
                                 Child = new FillFlowContainer
                                 {
                                     RelativeSizeAxes = Axes.X,
-                                    AutoSizeAxes = Axes.Y
+                                    AutoSizeAxes = Axes.Y,
+                                    Children = new Drawable[]
+                                    {
+                                        new ChannelButton
+                                        {
+                                            RelativeSizeAxes = Axes.X,
+                                            Height = 50,
+                                            ChannelName = "log",
+                                            Action = Show
+                                        }
+                                    }
                                 }
                             }
                         },

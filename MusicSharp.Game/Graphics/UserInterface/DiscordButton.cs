@@ -18,18 +18,14 @@ namespace MusicSharp.Game.Graphics.UserInterface
         public Color4? HoverColour
         {
             get => hoverColour;
-            set
-            {
-                if (value.HasValue)
-                    hoverColour = value.Value;
-                else
-                    hoverColour = Colour;
-            }
+            set => hoverColour = value ?? Colour;
         }
 
         private Color4 hoverColour;
 
-        protected new Container Content;
+        private Container content;
+
+        protected new Container<Drawable> Content => content;
 
         public new Color4 Colour
         {
@@ -37,6 +33,11 @@ namespace MusicSharp.Game.Graphics.UserInterface
             set
             {
                 colour = value;
+
+                if (!IsLoaded)
+                    return;
+
+                UpdateContent();
                 background.Colour = value;
             }
         }
@@ -45,8 +46,10 @@ namespace MusicSharp.Game.Graphics.UserInterface
 
         public bool LightenOnHover;
 
-        public DiscordButton()
+        [BackgroundDependencyLoader]
+        private void load()
         {
+            HoverColour = colour;
             Child = container = new Container
             {
                 Masking = true,
@@ -63,7 +66,7 @@ namespace MusicSharp.Game.Graphics.UserInterface
                         RelativeSizeAxes = Axes.Both,
                         Alpha = 0
                     },
-                    Content = new Container
+                    content = new Container
                     {
                         RelativeSizeAxes = Axes.Both
                     }
@@ -72,11 +75,11 @@ namespace MusicSharp.Game.Graphics.UserInterface
             Enabled.BindValueChanged(onEnableChanged, true);
         }
 
-        [BackgroundDependencyLoader]
-        private void load()
+        protected override void LoadComplete()
         {
-            container.CornerRadius = Height / 10;
-            HoverColour = colour;
+            base.LoadComplete();
+
+            UpdateContent();
         }
 
         protected override bool OnHover(HoverEvent e)
@@ -103,6 +106,12 @@ namespace MusicSharp.Game.Graphics.UserInterface
 
                 background.FadeColour(colour, 100);
             }
+        }
+
+        protected virtual void UpdateContent()
+        {
+            container.CornerRadius = Height / 10;
+            background.Colour = colour;
         }
 
         private void onEnableChanged(ValueChangedEvent<bool> e)
