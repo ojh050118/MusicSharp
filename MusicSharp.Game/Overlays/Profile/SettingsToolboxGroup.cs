@@ -1,4 +1,5 @@
 ﻿using MusicSharp.Game.Graphics;
+using MusicSharp.Game.Graphics.UserInterface;
 using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
@@ -25,19 +26,21 @@ namespace MusicSharp.Game.Overlays.Profile
             get => expanded;
             set
             {
-                if (value)
-                    expandedIcon.Icon = FontAwesome.Solid.ChevronUp;
-                else
-                    expandedIcon.Icon = FontAwesome.Solid.ChevronDown;
-
                 expanded = value;
+
+                if (!IsLoaded)
+                    return;
+
+                updateMenuState();
             }
         }
 
-        private bool expanded = false;
+        private bool expanded;
 
-        private SpriteText headerText;
+        private readonly SpriteText headerText;
         private SpriteIcon expandedIcon;
+
+        private MusicSharpMenu menu;
 
         private Box background;
 
@@ -102,9 +105,54 @@ namespace MusicSharp.Game.Overlays.Profile
                     Height = 3,
                     Colour = ColourInfo.GradientVertical(Color4.Black.Opacity(0.5f), Color4.Black.Opacity(0)),
                     Anchor = Anchor.BottomLeft
+                },
+                new Container
+                {
+                    Anchor = Anchor.BottomCentre,
+                    Origin = Anchor.TopCentre,
+                    RelativeSizeAxes = Axes.X,
+                    AutoSizeAxes = Axes.Y,
+                    Padding = new MarginPadding { Horizontal = 15 },
+                    Child = menu = new MusicSharpMenu(Direction.Vertical)
+                    {
+                        Anchor = Anchor.TopCentre,
+                        Origin = Anchor.TopCentre,
+                        RelativeSizeAxes = Axes.X,
+                        Margin = new MarginPadding { Top = 10 },
+                        Items = new[]
+                        {
+                            new MusicSharpMenuItem("Alarm settings", FontAwesome.Solid.Bell, MenuItemType.Standard),
+                            new MusicSharpMenuItem("Settings", FontAwesome.Solid.Cog, MenuItemType.Highlighted),
+                            new MusicSharpMenuItem("Clear all logs", FontAwesome.Solid.TrashAlt, MenuItemType.Destructive),
+                            new MusicSharpMenuItem("Exit", FontAwesome.Solid.DoorOpen, MenuItemType.Destructive),
+                        }
+                    }
                 }
             };
             Action += () => Expanded = !expanded;
+        }
+
+        protected override void LoadComplete()
+        {
+            base.LoadComplete();
+
+            updateMenuState();
+        }
+
+        private void updateMenuState()
+        {
+            if (expanded)
+            {
+                expandedIcon.Icon = FontAwesome.Solid.ChevronUp;
+                menu.Open();
+                menu.FadeIn(100).ScaleTo(1, 300, Easing.OutQuint);
+            }
+            else
+            {
+                expandedIcon.Icon = FontAwesome.Solid.ChevronDown;
+                menu.Close();
+                menu.ScaleTo(0, 300, Easing.OutQuint).FadeOut(100);
+            }
         }
 
         protected override bool OnHover(HoverEvent e)

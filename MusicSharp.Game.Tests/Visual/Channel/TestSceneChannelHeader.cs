@@ -1,7 +1,7 @@
 ﻿using MusicSharp.Game.Overlays.Logging.Channel;
 using osu.Framework.Graphics;
 
-namespace MusicSharp.Game.Tests.Visual.UserInterface
+namespace MusicSharp.Game.Tests.Visual.Channel
 {
     public class TestSceneChannelHeader : MusicSharpTestScene
     {

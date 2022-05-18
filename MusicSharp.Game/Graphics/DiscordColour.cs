@@ -8,7 +8,11 @@ namespace MusicSharp.Game.Graphics
 
         public readonly Color4 Green = new Color4(61, 165, 96, 255);
 
+        public readonly Color4 LightBlue = new Color4(148, 156, 247, 255);
+
         public readonly Color4 Blue = new Color4(88, 102, 239, 255);
+
+        public readonly Color4 DarkWhite = new Color4(185, 187, 190, 255);
 
         public readonly Color4 LightestGray = new Color4(142, 146, 151, 255);
 
