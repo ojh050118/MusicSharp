@@ -1,15 +1,25 @@
-﻿using MusicSharp.Game.Graphics;
+﻿using System;
+using MusicSharp.Game.Graphics;
 using MusicSharp.Game.Graphics.UserInterface;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osuTK;
+using osuTK.Graphics;
 
 namespace MusicSharp.Game.Overlays.Logging.Channel
 {
-    public class ChannelButton : DiscordButton
+    public class ChannelRadioButton : DiscordButton
     {
+        public Action<RadioButton> Selected;
+
+        public readonly RadioButton Button;
+
+        private Color4 defaultBackgroundColour;
+        private Color4 defaultHoverColour;
+        private Color4 defaultSelectedColour;
+
         public string ChannelName
         {
             get => channelName;
@@ -28,18 +38,28 @@ namespace MusicSharp.Game.Overlays.Logging.Channel
 
         private SpriteText channelText;
 
+        public ChannelRadioButton(RadioButton button)
+        {
+            Button = button;
+            ChannelName = button.Label;
+            Action = button.Select;
+            RelativeSizeAxes = Axes.X;
+            Height = 60;
+        }
+
         [BackgroundDependencyLoader]
         private void load(DiscordColour colours)
         {
-            Colour = colours.DarkGray;
-            HoverColour = colours.Gray;
+            Colour = defaultBackgroundColour = colours.DarkGray;
+            defaultSelectedColour = colours.LightGray;
+            HoverColour = defaultHoverColour = colours.Gray;
             Content.Padding = new MarginPadding(15);
             Content.Add(new GridContainer
             {
                 RelativeSizeAxes = Axes.Both,
                 RowDimensions = new[]
                 {
-                    new Dimension(GridSizeMode.Distributed)
+                    new Dimension()
                 },
                 ColumnDimensions = new[]
                 {
@@ -70,6 +90,30 @@ namespace MusicSharp.Game.Overlays.Logging.Channel
                     }
                 }
             });
+        }
+
+        protected override void LoadComplete()
+        {
+            base.LoadComplete();
+
+            Button.Selected.ValueChanged += selected =>
+            {
+                updateSelectionState();
+                if (selected.NewValue)
+                    Selected?.Invoke(Button);
+            };
+
+            Button.Selected.BindDisabledChanged(disabled => Enabled.Value = !disabled, true);
+            updateSelectionState();
+        }
+
+        private void updateSelectionState()
+        {
+            if (!IsLoaded)
+                return;
+
+            Colour = Button.Selected.Value ? defaultSelectedColour : defaultBackgroundColour;
+            HoverColour = Button.Selected.Value ? defaultSelectedColour : defaultHoverColour;
         }
 
         protected override void UpdateContent()

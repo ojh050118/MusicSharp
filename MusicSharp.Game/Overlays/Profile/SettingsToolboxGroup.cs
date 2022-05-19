@@ -7,6 +7,7 @@ using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
 using osuTK;
 using osuTK.Graphics;
@@ -130,6 +131,11 @@ namespace MusicSharp.Game.Overlays.Profile
                 }
             };
             Action += () => Expanded = !expanded;
+            menu.StateChanged += s =>
+            {
+                expanded = s == MenuState.Open;
+                expandedIcon.Icon = s == MenuState.Closed ? FontAwesome.Solid.ChevronDown : FontAwesome.Solid.ChevronUp;
+            };
         }
 
         protected override void LoadComplete()

@@ -1,4 +1,5 @@
-﻿using MusicSharp.Game.Graphics;
+﻿using System.Linq;
+using MusicSharp.Game.Graphics;
 using MusicSharp.Game.Graphics.Containers;
 using MusicSharp.Game.Online;
 using MusicSharp.Game.Overlays.Logging.Channel;
@@ -14,6 +15,8 @@ namespace MusicSharp.Game.Overlays.Profile
     public class ClientInfo : Container
     {
         private MusicSharpScrollContainer scrollContainer;
+
+        private ChannelRadioButtonCollection channelCollection;
 
         [BackgroundDependencyLoader]
         private void load(DiscordColour colours, DiscordClient client)
@@ -48,12 +51,14 @@ namespace MusicSharp.Game.Overlays.Profile
                                     AutoSizeAxes = Axes.Y,
                                     Children = new Drawable[]
                                     {
-                                        new ChannelButton
+                                        channelCollection = new ChannelRadioButtonCollection
                                         {
                                             RelativeSizeAxes = Axes.X,
-                                            Height = 50,
-                                            ChannelName = "log",
-                                            Action = Show
+                                            /*Items = new[]
+                                            {
+                                                new RadioButton("log", Show),
+                                                new RadioButton("commands-log", Show)
+                                            }*/
                                         }
                                     }
                                 }
@@ -75,6 +80,24 @@ namespace MusicSharp.Game.Overlays.Profile
                     }
                 }
             };
+
+            channelCollection.Items = new[]
+            {
+                new RadioButton("log", Show),
+                new RadioButton("commands-log", Show)
+            };
+        }
+
+        protected override void LoadComplete()
+        {
+            base.LoadComplete();
+
+            setSelectionChannel();
+        }
+
+        private void setSelectionChannel()
+        {
+            channelCollection.Items.First().Select();
         }
 
         protected override bool OnHover(HoverEvent e)
