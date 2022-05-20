@@ -1,3 +1,4 @@
+using System.Linq;
 using MusicSharp.Game.Graphics;
 using MusicSharp.Game.Graphics.UserInterface;
 using MusicSharp.Game.Online;
@@ -5,6 +6,7 @@ using MusicSharp.Game.Overlays.Logging;
 using MusicSharp.Game.Overlays.Logging.Channel;
 using MusicSharp.Game.Overlays.Profile;
 using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
@@ -20,7 +22,7 @@ namespace MusicSharp.Game
         private TextButton startButton;
 
         private ClientInfo clientInfo;
-        private Container loggingContainer;
+        private Container<LoggingChannel> loggingContainer;
 
         [BackgroundDependencyLoader]
         private void load(DiscordColour colour, DiscordClient client)
@@ -64,7 +66,7 @@ namespace MusicSharp.Game
                                     {
                                         new Drawable[]
                                         {
-                                            loggingContainer = new Container
+                                            loggingContainer = new Container<LoggingChannel>
                                             {
                                                 RelativeSizeAxes = Axes.Both,
                                             }
@@ -130,14 +132,28 @@ namespace MusicSharp.Game
             };
             client.IsRunning.TriggerChange();
 
-            clientInfo.ChannelCollection.OnChanged += onChannelChanged;
+            clientInfo.ChannelCollection.OnChanged.ValueChanged += onChannelChanged;
         }
 
-        private void onChannelChanged(RadioButton button)
+        private void onChannelChanged(ValueChangedEvent<RadioButton> e)
         {
-            var lastChannel = clientInfo.Current;
+            var lastChannel = loggingContainer.Children.SingleOrDefault(c => c.ChannelName == e.OldValue.Label);
+            LoggingChannel channel;
 
-            
+            if ((channel = loggingContainer.Children.SingleOrDefault(c => c.ChannelName == e.NewValue.Label)) != null)
+            {
+                loggingContainer.ChangeChildDepth(channel, lastChannel?.Depth - 1 ?? 0);
+            }
+            else
+            {
+                channel = new LoggingChannel
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    ChannelName = e.NewValue.Label,
+                    Description = e.NewValue.Description
+                };
+                loggingContainer.Add(channel);
+            }
         }
 
         private void start()

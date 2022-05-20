@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using osu.Framework.Bindables;
 using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -26,7 +27,7 @@ namespace MusicSharp.Game.Overlays.Logging.Channel
 
         private IReadOnlyList<RadioButton> items;
 
-        public Action<RadioButton> OnChanged;
+        public Bindable<RadioButton> OnChanged { get; private set; }
 
         private FillFlowContainer<ChannelRadioButton> buttonContainer;
 
@@ -34,6 +35,7 @@ namespace MusicSharp.Game.Overlays.Logging.Channel
 
         public ChannelRadioButtonCollection()
         {
+            OnChanged = new Bindable<RadioButton>();
             AutoSizeAxes = Axes.Y;
             InternalChild = buttonContainer = new FillFlowContainer<ChannelRadioButton>
             {
@@ -52,10 +54,12 @@ namespace MusicSharp.Game.Overlays.Logging.Channel
                 {
                     CurrentlySelected?.Deselect();
                     CurrentlySelected = button;
-                    OnChanged?.Invoke(button);
+                    OnChanged.Value = button;
                 }
                 else
+                {
                     CurrentlySelected = null;
+                }
             };
 
             buttonContainer.Add(new ChannelRadioButton(button));

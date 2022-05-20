@@ -9,6 +9,8 @@ namespace MusicSharp.Game.Overlays.Logging.Channel
 
         public string Label;
 
+        public string Description;
+
         private readonly Action action;
 
         public RadioButton(string label, Action action)
