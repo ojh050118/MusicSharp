@@ -1,6 +1,7 @@
 ﻿using System;
 using MusicSharp.Game.Graphics.Containers;
 using MusicSharp.Game.Online;
+using MusicSharp.Game.Overlays.Logging.Extensions;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -23,26 +24,21 @@ namespace MusicSharp.Game.Overlays.Logging
                 RelativeSizeAxes = Axes.X,
                 Padding = new MarginPadding { Vertical = 16, Right = 16 },
             };
-            client.OnClientLogReceived += addLog;
         }
 
-        private void addLog(Discord.LogMessage log)
+        public void AddLog(LogMessage log)
         {
-            Schedule(() =>
+            if (lastLog == null || (DateTime.Now - lastLog.Message.CreatedTime).Seconds > 420)
             {
-                if (lastLog == null || (DateTime.Now - lastLog.Message.CreatedTime).Seconds > 420)
-                    messageContent.Add(lastLog = new LogLineHeader(new LogMessage(log.Message))
-                    {
-                        Margin = new MarginPadding { Top = lastLog == null ? 0 : 28 }
-                    });
-                else
-                    messageContent.Add(lastLog = new LogLine(new LogMessage(log.Message)));
+                messageContent.Add(lastLog = new LogLineHeader(log)
+                {
+                    Margin = new MarginPadding { Top = lastLog == null ? 0 : 28 }
+                });
+            }
+            else
+                messageContent.Add(new LogLine(log));
 
-                if (log.Exception != null)
-                    messageContent.Add(new LogLine(new LogMessage(log.Exception.Message)));
-
-                Scheduler.AddDelayed(() => ScrollToEnd(), 100);
-            });
+            Scheduler.AddDelayed(() => ScrollToEnd(), 100);
         }
     }
 }

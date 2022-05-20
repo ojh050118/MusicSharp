@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -25,9 +26,11 @@ namespace MusicSharp.Game.Overlays.Logging.Channel
 
         private IReadOnlyList<RadioButton> items;
 
+        public Action<RadioButton> OnChanged;
+
         private FillFlowContainer<ChannelRadioButton> buttonContainer;
 
-        private RadioButton currentlySelected;
+        public RadioButton CurrentlySelected { get; private set; }
 
         public ChannelRadioButtonCollection()
         {
@@ -47,11 +50,12 @@ namespace MusicSharp.Game.Overlays.Logging.Channel
             {
                 if (selected.NewValue)
                 {
-                    currentlySelected?.Deselect();
-                    currentlySelected = button;
+                    CurrentlySelected?.Deselect();
+                    CurrentlySelected = button;
+                    OnChanged?.Invoke(button);
                 }
                 else
-                    currentlySelected = null;
+                    CurrentlySelected = null;
             };
 
             buttonContainer.Add(new ChannelRadioButton(button));

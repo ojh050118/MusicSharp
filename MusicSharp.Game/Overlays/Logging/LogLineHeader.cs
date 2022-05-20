@@ -103,7 +103,7 @@ namespace MusicSharp.Game.Overlays.Logging
                                                         Anchor = Anchor.CentreLeft,
                                                         Origin = Anchor.CentreLeft,
                                                         Font = FontUsage.Default.With(family: "OpenSans-Bold", size: 28),
-                                                        Text = "Discord"
+                                                        Text = Message.Author
                                                     },
                                                     new SpriteText
                                                     {

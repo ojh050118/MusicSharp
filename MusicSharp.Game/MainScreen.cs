@@ -2,6 +2,8 @@ using MusicSharp.Game.Graphics;
 using MusicSharp.Game.Graphics.UserInterface;
 using MusicSharp.Game.Online;
 using MusicSharp.Game.Overlays.Logging;
+using MusicSharp.Game.Overlays.Logging.Channel;
+using MusicSharp.Game.Overlays.Profile;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -17,83 +19,107 @@ namespace MusicSharp.Game
         private TextButton stopButton;
         private TextButton startButton;
 
+        private ClientInfo clientInfo;
+        private Container loggingContainer;
+
         [BackgroundDependencyLoader]
         private void load(DiscordColour colour, DiscordClient client)
         {
-            InternalChildren = new Drawable[]
+            InternalChild = new GridContainer
             {
-                new Box
+                RelativeSizeAxes = Axes.Both,
+                ColumnDimensions = new[]
                 {
-                    Colour = colour.Gray,
-                    RelativeSizeAxes = Axes.Both,
+                    new Dimension(GridSizeMode.Distributed, maxSize: 350),
+                    new Dimension(GridSizeMode.Distributed),
                 },
-                new GridContainer
+                Content = new[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    RowDimensions = new[]
+                    new Drawable[]
                     {
-                        new Dimension(),
-                        new Dimension(GridSizeMode.AutoSize),
-                    },
-                    Content = new[]
-                    {
-                        new Drawable[]
+                        clientInfo = new ClientInfo
                         {
-                            new LoggingChannel
-                            {
-                                RelativeSizeAxes = Axes.Both,
-                                ChannelName = "Log",
-                                Description = "This is a discord client logging channel."
-                            }
+                            RelativeSizeAxes = Axes.Y,
+                            Width = 350
                         },
-                        new Drawable[]
+                        new Container
                         {
-                            new GridContainer
+                            RelativeSizeAxes = Axes.Both,
+                            Children = new Drawable[]
                             {
-                                Anchor = Anchor.BottomCentre,
-                                Origin = Anchor.BottomCentre,
-                                RelativeSizeAxes = Axes.X,
-                                AutoSizeAxes = Axes.Y,
-                                RowDimensions = new[]
+                                new Box
                                 {
-                                    new Dimension(GridSizeMode.AutoSize),
-                                    new Dimension(GridSizeMode.AutoSize),
+                                    Colour = colour.Gray,
+                                    RelativeSizeAxes = Axes.Both,
                                 },
-                                Content = new[]
+                                new GridContainer
                                 {
-                                    new Drawable[]
+                                    RelativeSizeAxes = Axes.Both,
+                                    RowDimensions = new[]
                                     {
-                                        stopButton = new TextButton
+                                        new Dimension(),
+                                        new Dimension(GridSizeMode.AutoSize),
+                                    },
+                                    Content = new[]
+                                    {
+                                        new Drawable[]
                                         {
-                                            Anchor = Anchor.Centre,
-                                            Origin = Anchor.Centre,
-                                            RelativeSizeAxes = Axes.X,
-                                            Height = 60,
-                                            Padding = new MarginPadding(5),
-                                            Colour = colour.Red,
-                                            LightenOnHover = true,
-                                            Text = "Stop",
-                                            Action = stop
+                                            loggingContainer = new Container
+                                            {
+                                                RelativeSizeAxes = Axes.Both,
+                                            }
                                         },
-                                        startButton = new TextButton
+                                        new Drawable[]
                                         {
-                                            Anchor = Anchor.Centre,
-                                            Origin = Anchor.Centre,
-                                            RelativeSizeAxes = Axes.X,
-                                            Height = 60,
-                                            Colour = colour.Blue,
-                                            Padding = new MarginPadding(5),
-                                            Text = "Start",
-                                            LightenOnHover = true,
-                                            Action = start
-                                        },
+                                            new GridContainer
+                                            {
+                                                Anchor = Anchor.BottomCentre,
+                                                Origin = Anchor.BottomCentre,
+                                                RelativeSizeAxes = Axes.X,
+                                                AutoSizeAxes = Axes.Y,
+                                                RowDimensions = new[]
+                                                {
+                                                    new Dimension(GridSizeMode.AutoSize),
+                                                    new Dimension(GridSizeMode.AutoSize),
+                                                },
+                                                Content = new[]
+                                                {
+                                                    new Drawable[]
+                                                    {
+                                                        stopButton = new TextButton
+                                                        {
+                                                            Anchor = Anchor.Centre,
+                                                            Origin = Anchor.Centre,
+                                                            RelativeSizeAxes = Axes.X,
+                                                            Height = 60,
+                                                            Padding = new MarginPadding(5),
+                                                            Colour = colour.Red,
+                                                            LightenOnHover = true,
+                                                            Text = "Stop",
+                                                            Action = stop
+                                                        },
+                                                        startButton = new TextButton
+                                                        {
+                                                            Anchor = Anchor.Centre,
+                                                            Origin = Anchor.Centre,
+                                                            RelativeSizeAxes = Axes.X,
+                                                            Height = 60,
+                                                            Colour = colour.Blue,
+                                                            Padding = new MarginPadding(5),
+                                                            Text = "Start",
+                                                            LightenOnHover = true,
+                                                            Action = start
+                                                        },
+                                                    }
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
-
             };
 
             this.client = client;
@@ -103,6 +129,15 @@ namespace MusicSharp.Game
                 startButton.Enabled.Value = !v.NewValue;
             };
             client.IsRunning.TriggerChange();
+
+            clientInfo.ChannelCollection.OnChanged += onChannelChanged;
+        }
+
+        private void onChannelChanged(RadioButton button)
+        {
+            var lastChannel = clientInfo.Current;
+
+            
         }
 
         private void start()

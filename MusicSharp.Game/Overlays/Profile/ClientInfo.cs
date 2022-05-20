@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using MusicSharp.Game.Graphics;
 using MusicSharp.Game.Graphics.Containers;
 using MusicSharp.Game.Online;
@@ -16,7 +17,9 @@ namespace MusicSharp.Game.Overlays.Profile
     {
         private MusicSharpScrollContainer scrollContainer;
 
-        private ChannelRadioButtonCollection channelCollection;
+        public ChannelRadioButtonCollection ChannelCollection;
+
+        public RadioButton Current => ChannelCollection.CurrentlySelected;
 
         [BackgroundDependencyLoader]
         private void load(DiscordColour colours, DiscordClient client)
@@ -51,14 +54,9 @@ namespace MusicSharp.Game.Overlays.Profile
                                     AutoSizeAxes = Axes.Y,
                                     Children = new Drawable[]
                                     {
-                                        channelCollection = new ChannelRadioButtonCollection
+                                        ChannelCollection = new ChannelRadioButtonCollection
                                         {
                                             RelativeSizeAxes = Axes.X,
-                                            /*Items = new[]
-                                            {
-                                                new RadioButton("log", Show),
-                                                new RadioButton("commands-log", Show)
-                                            }*/
                                         }
                                     }
                                 }
@@ -81,7 +79,7 @@ namespace MusicSharp.Game.Overlays.Profile
                 }
             };
 
-            channelCollection.Items = new[]
+            ChannelCollection.Items = new[]
             {
                 new RadioButton("log", Show),
                 new RadioButton("commands-log", Show)
@@ -97,7 +95,7 @@ namespace MusicSharp.Game.Overlays.Profile
 
         private void setSelectionChannel()
         {
-            channelCollection.Items.First().Select();
+            ChannelCollection.Items.First().Select();
         }
 
         protected override bool OnHover(HoverEvent e)
