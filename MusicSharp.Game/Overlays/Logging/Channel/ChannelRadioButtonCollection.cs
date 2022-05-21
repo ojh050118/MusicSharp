@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using osu.Framework.Bindables;
 using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -8,7 +9,7 @@ namespace MusicSharp.Game.Overlays.Logging.Channel
 {
     public class ChannelRadioButtonCollection : Container
     {
-        public IReadOnlyList<RadioButton> Items
+        public IReadOnlyList<ChannelRadioButton> Items
         {
             get => items;
             set
@@ -23,16 +24,19 @@ namespace MusicSharp.Game.Overlays.Logging.Channel
             }
         }
 
-        private IReadOnlyList<RadioButton> items;
+        private IReadOnlyList<ChannelRadioButton> items;
 
-        private FillFlowContainer<ChannelRadioButton> buttonContainer;
+        public Bindable<ChannelRadioButton> OnChanged { get; private set; }
 
-        private RadioButton currentlySelected;
+        private readonly FillFlowContainer<DrawableChannelRadioButton> buttonContainer;
+
+        public ChannelRadioButton CurrentlySelected { get; private set; }
 
         public ChannelRadioButtonCollection()
         {
+            OnChanged = new Bindable<ChannelRadioButton>();
             AutoSizeAxes = Axes.Y;
-            InternalChild = buttonContainer = new FillFlowContainer<ChannelRadioButton>
+            InternalChild = buttonContainer = new FillFlowContainer<DrawableChannelRadioButton>
             {
                 RelativeSizeAxes = Axes.X,
                 AutoSizeAxes = Axes.Y,
@@ -41,20 +45,23 @@ namespace MusicSharp.Game.Overlays.Logging.Channel
             };
         }
 
-        private void addButton(RadioButton button)
+        private void addButton(ChannelRadioButton button)
         {
             button.Selected.ValueChanged += selected =>
             {
                 if (selected.NewValue)
                 {
-                    currentlySelected?.Deselect();
-                    currentlySelected = button;
+                    CurrentlySelected?.Deselect();
+                    CurrentlySelected = button;
+                    OnChanged.Value = button;
                 }
                 else
-                    currentlySelected = null;
+                {
+                    CurrentlySelected = null;
+                }
             };
 
-            buttonContainer.Add(new ChannelRadioButton(button));
+            buttonContainer.Add(new DrawableChannelRadioButton(button));
         }
     }
 }

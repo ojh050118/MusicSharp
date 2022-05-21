@@ -16,8 +16,8 @@ namespace MusicSharp.Game.Tests.Visual.Channel
                 RelativeSizeAxes = Axes.X,
                 Items = new[]
                 {
-                    new RadioButton("log", null),
-                    new RadioButton("commands-log", null)
+                    new ChannelRadioButton("log", null),
+                    new ChannelRadioButton("commands-log", null)
                 }
             });
             AddStep("Select log", channelCollection.Items.First().Select);

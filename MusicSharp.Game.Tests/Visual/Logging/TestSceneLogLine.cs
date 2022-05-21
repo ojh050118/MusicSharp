@@ -7,7 +7,7 @@ namespace MusicSharp.Game.Tests.Visual.Logging
     {
         public TestSceneLogLine()
         {
-            Add(new LogLine(new LogMessage("Hello, World!"))
+            Add(new LogLine(new LogMessage("Discord", "Hello, World!"))
             {
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre

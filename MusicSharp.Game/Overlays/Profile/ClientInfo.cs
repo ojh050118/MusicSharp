@@ -2,7 +2,9 @@
 using MusicSharp.Game.Graphics;
 using MusicSharp.Game.Graphics.Containers;
 using MusicSharp.Game.Online;
+using MusicSharp.Game.Overlays.Logging;
 using MusicSharp.Game.Overlays.Logging.Channel;
+using MusicSharp.Game.Overlays.Logging.Extensions;
 using MusicSharp.Game.Users.Drawables;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
@@ -16,7 +18,12 @@ namespace MusicSharp.Game.Overlays.Profile
     {
         private MusicSharpScrollContainer scrollContainer;
 
-        private ChannelRadioButtonCollection channelCollection;
+        public ChannelRadioButtonCollection ChannelCollection;
+
+        public ChannelRadioButton Current => ChannelCollection.CurrentlySelected;
+
+        private ChannelRadioButton logChannel;
+        private ChannelRadioButton commandChannel;
 
         [BackgroundDependencyLoader]
         private void load(DiscordColour colours, DiscordClient client)
@@ -51,14 +58,9 @@ namespace MusicSharp.Game.Overlays.Profile
                                     AutoSizeAxes = Axes.Y,
                                     Children = new Drawable[]
                                     {
-                                        channelCollection = new ChannelRadioButtonCollection
+                                        ChannelCollection = new ChannelRadioButtonCollection
                                         {
                                             RelativeSizeAxes = Axes.X,
-                                            /*Items = new[]
-                                            {
-                                                new RadioButton("log", Show),
-                                                new RadioButton("commands-log", Show)
-                                            }*/
                                         }
                                     }
                                 }
@@ -81,10 +83,26 @@ namespace MusicSharp.Game.Overlays.Profile
                 }
             };
 
-            channelCollection.Items = new[]
+            ChannelCollection.Items = new[]
             {
-                new RadioButton("log", Show),
-                new RadioButton("commands-log", Show)
+                logChannel = new ChannelRadioButton("log")
+                {
+                    Description = "Discord client log channel."
+                },
+                commandChannel = new ChannelRadioButton("commands-log")
+                {
+                    Description = "Command usage history channel."
+                }
+            };
+
+            client.OnClientLogReceived += log => logChannel.Log?.Invoke(log.ToLogMessage());
+            client.OnCommandExecuted += command =>
+            {
+                var log = new LogMessage(command.User.Username, $"Used {command.User.Username}#{command.User.Discriminator} /{command.CommandName}")
+                {
+                    User = command.User
+                };
+                commandChannel.Log?.Invoke(log);
             };
         }
 
@@ -97,7 +115,7 @@ namespace MusicSharp.Game.Overlays.Profile
 
         private void setSelectionChannel()
         {
-            channelCollection.Items.First().Select();
+            ChannelCollection.Items.First().Select();
         }
 
         protected override bool OnHover(HoverEvent e)

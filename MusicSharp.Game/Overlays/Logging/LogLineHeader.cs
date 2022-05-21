@@ -49,7 +49,7 @@ namespace MusicSharp.Game.Overlays.Logging
                             {
                                 RelativeSizeAxes = Axes.Both,
                                 Masking = true,
-                                Child = new DelayedLoadWrapper(new DrawableAvatar(client.User)
+                                Child = new DelayedLoadWrapper(new DrawableAvatar(Message.User ?? client.User)
                                 {
                                     RelativeSizeAxes = Axes.Both
                                 })
@@ -103,7 +103,7 @@ namespace MusicSharp.Game.Overlays.Logging
                                                         Anchor = Anchor.CentreLeft,
                                                         Origin = Anchor.CentreLeft,
                                                         Font = FontUsage.Default.With(family: "OpenSans-Bold", size: 28),
-                                                        Text = "Discord"
+                                                        Text = Message.Author
                                                     },
                                                     new SpriteText
                                                     {
