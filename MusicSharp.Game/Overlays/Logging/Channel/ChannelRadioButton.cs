@@ -1,5 +1,4 @@
 ﻿using System;
-using osu.Framework.Bindables;
 
 namespace MusicSharp.Game.Overlays.Logging.Channel
 {

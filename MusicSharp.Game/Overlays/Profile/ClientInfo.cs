@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using MusicSharp.Game.Graphics;
 using MusicSharp.Game.Graphics.Containers;
 using MusicSharp.Game.Online;

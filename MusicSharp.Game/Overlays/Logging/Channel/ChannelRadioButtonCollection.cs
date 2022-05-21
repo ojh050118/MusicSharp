@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Framework.Graphics;
@@ -29,7 +28,7 @@ namespace MusicSharp.Game.Overlays.Logging.Channel
 
         public Bindable<ChannelRadioButton> OnChanged { get; private set; }
 
-        private FillFlowContainer<DrawableChannelRadioButton> buttonContainer;
+        private readonly FillFlowContainer<DrawableChannelRadioButton> buttonContainer;
 
         public ChannelRadioButton CurrentlySelected { get; private set; }
 
@@ -48,8 +47,6 @@ namespace MusicSharp.Game.Overlays.Logging.Channel
 
         private void addButton(ChannelRadioButton button)
         {
-            DrawableChannelRadioButton channelButton;
-
             button.Selected.ValueChanged += selected =>
             {
                 if (selected.NewValue)
@@ -64,7 +61,7 @@ namespace MusicSharp.Game.Overlays.Logging.Channel
                 }
             };
 
-            buttonContainer.Add(channelButton = new DrawableChannelRadioButton(button));
+            buttonContainer.Add(new DrawableChannelRadioButton(button));
         }
     }
 }
