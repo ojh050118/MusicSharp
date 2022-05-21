@@ -10,7 +10,7 @@ namespace MusicSharp.Game.Overlays.Logging.Channel
 {
     public class ChannelRadioButtonCollection : Container
     {
-        public IReadOnlyList<RadioButton> Items
+        public IReadOnlyList<ChannelRadioButton> Items
         {
             get => items;
             set
@@ -25,19 +25,19 @@ namespace MusicSharp.Game.Overlays.Logging.Channel
             }
         }
 
-        private IReadOnlyList<RadioButton> items;
+        private IReadOnlyList<ChannelRadioButton> items;
 
-        public Bindable<RadioButton> OnChanged { get; private set; }
+        public Bindable<ChannelRadioButton> OnChanged { get; private set; }
 
-        private FillFlowContainer<ChannelRadioButton> buttonContainer;
+        private FillFlowContainer<DrawableChannelRadioButton> buttonContainer;
 
-        public RadioButton CurrentlySelected { get; private set; }
+        public ChannelRadioButton CurrentlySelected { get; private set; }
 
         public ChannelRadioButtonCollection()
         {
-            OnChanged = new Bindable<RadioButton>();
+            OnChanged = new Bindable<ChannelRadioButton>();
             AutoSizeAxes = Axes.Y;
-            InternalChild = buttonContainer = new FillFlowContainer<ChannelRadioButton>
+            InternalChild = buttonContainer = new FillFlowContainer<DrawableChannelRadioButton>
             {
                 RelativeSizeAxes = Axes.X,
                 AutoSizeAxes = Axes.Y,
@@ -46,8 +46,10 @@ namespace MusicSharp.Game.Overlays.Logging.Channel
             };
         }
 
-        private void addButton(RadioButton button)
+        private void addButton(ChannelRadioButton button)
         {
+            DrawableChannelRadioButton channelButton;
+
             button.Selected.ValueChanged += selected =>
             {
                 if (selected.NewValue)
@@ -62,7 +64,7 @@ namespace MusicSharp.Game.Overlays.Logging.Channel
                 }
             };
 
-            buttonContainer.Add(new ChannelRadioButton(button));
+            buttonContainer.Add(channelButton = new DrawableChannelRadioButton(button));
         }
     }
 }

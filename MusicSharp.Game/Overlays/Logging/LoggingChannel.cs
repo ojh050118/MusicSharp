@@ -22,6 +22,7 @@ namespace MusicSharp.Game.Overlays.Logging
         }
 
         private ChannelHeader header;
+        private LogScrollContainer log;
 
         public LoggingChannel()
         {
@@ -59,7 +60,7 @@ namespace MusicSharp.Game.Overlays.Logging
                         },
                         new Drawable[]
                         {
-                            new LogScrollContainer
+                            log = new LogScrollContainer
                             {
                                 RelativeSizeAxes = Axes.Both
                             }
@@ -68,5 +69,7 @@ namespace MusicSharp.Game.Overlays.Logging
                 }
             };
         }
+
+        public void AddLog(LogMessage message) => Schedule(() => log?.AddLog(message));
     }
 }

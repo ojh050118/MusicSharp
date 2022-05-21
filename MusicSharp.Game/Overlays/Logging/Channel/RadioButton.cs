@@ -13,7 +13,7 @@ namespace MusicSharp.Game.Overlays.Logging.Channel
 
         private readonly Action action;
 
-        public RadioButton(string label, Action action)
+        public RadioButton(string label, Action action = null)
         {
             Label = label;
             this.action = action;

@@ -135,7 +135,7 @@ namespace MusicSharp.Game
             clientInfo.ChannelCollection.OnChanged.ValueChanged += onChannelChanged;
         }
 
-        private void onChannelChanged(ValueChangedEvent<RadioButton> e)
+        private void onChannelChanged(ValueChangedEvent<ChannelRadioButton> e)
         {
             var lastChannel = loggingContainer.Children.SingleOrDefault(c => c.ChannelName == e.OldValue.Label);
             LoggingChannel channel;
@@ -152,6 +152,7 @@ namespace MusicSharp.Game
                     ChannelName = e.NewValue.Label,
                     Description = e.NewValue.Description
                 };
+                e.NewValue.Log += channel.AddLog;
                 loggingContainer.Add(channel);
             }
         }

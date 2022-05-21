@@ -3,7 +3,9 @@ using System.Linq;
 using MusicSharp.Game.Graphics;
 using MusicSharp.Game.Graphics.Containers;
 using MusicSharp.Game.Online;
+using MusicSharp.Game.Overlays.Logging;
 using MusicSharp.Game.Overlays.Logging.Channel;
+using MusicSharp.Game.Overlays.Logging.Extensions;
 using MusicSharp.Game.Users.Drawables;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
@@ -19,7 +21,10 @@ namespace MusicSharp.Game.Overlays.Profile
 
         public ChannelRadioButtonCollection ChannelCollection;
 
-        public RadioButton Current => ChannelCollection.CurrentlySelected;
+        public ChannelRadioButton Current => ChannelCollection.CurrentlySelected;
+
+        private ChannelRadioButton logChannel;
+        private ChannelRadioButton commandChannel;
 
         [BackgroundDependencyLoader]
         private void load(DiscordColour colours, DiscordClient client)
@@ -81,9 +86,18 @@ namespace MusicSharp.Game.Overlays.Profile
 
             ChannelCollection.Items = new[]
             {
-                new RadioButton("log", Show),
-                new RadioButton("commands-log", Show)
+                logChannel = new ChannelRadioButton("log")
+                {
+                    Description = "Discord client log channel."
+                },
+                commandChannel = new ChannelRadioButton("commands-log")
+                {
+                    Description = "Command usage history channel."
+                }
             };
+
+            client.OnClientLogReceived += log => logChannel.Log?.Invoke(log.ToLogMessage());
+            client.OnCommandExecuted += command => commandChannel.Log?.Invoke(new LogMessage(command.User.Username, $"Used {command.User.Username}#{command.User.Discriminator} /{command.CommandName}"));
         }
 
         protected override void LoadComplete()
