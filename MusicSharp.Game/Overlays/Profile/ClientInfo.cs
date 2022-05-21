@@ -97,7 +97,14 @@ namespace MusicSharp.Game.Overlays.Profile
             };
 
             client.OnClientLogReceived += log => logChannel.Log?.Invoke(log.ToLogMessage());
-            client.OnCommandExecuted += command => commandChannel.Log?.Invoke(new LogMessage(command.User.Username, $"Used {command.User.Username}#{command.User.Discriminator} /{command.CommandName}"));
+            client.OnCommandExecuted += command =>
+            {
+                var log = new LogMessage(command.User.Username, $"Used {command.User.Username}#{command.User.Discriminator} /{command.CommandName}")
+                {
+                    User = command.User
+                };
+                commandChannel.Log?.Invoke(log);
+            };
         }
 
         protected override void LoadComplete()

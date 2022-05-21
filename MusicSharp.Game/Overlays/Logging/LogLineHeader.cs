@@ -49,7 +49,7 @@ namespace MusicSharp.Game.Overlays.Logging
                             {
                                 RelativeSizeAxes = Axes.Both,
                                 Masking = true,
-                                Child = new DelayedLoadWrapper(new DrawableAvatar(client.User)
+                                Child = new DelayedLoadWrapper(new DrawableAvatar(Message.User ?? client.User)
                                 {
                                     RelativeSizeAxes = Axes.Both
                                 })

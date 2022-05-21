@@ -1,4 +1,5 @@
 ﻿using System;
+using Discord.WebSocket;
 
 namespace MusicSharp.Game.Overlays.Logging
 {
@@ -9,6 +10,8 @@ namespace MusicSharp.Game.Overlays.Logging
         public string Message { get; }
 
         public string Author { get; }
+
+        public SocketUser User;
 
         public LogMessage(string author, string message)
         {

@@ -15,7 +15,7 @@ namespace MusicSharp.Game.Overlays.Logging
         private LogLineContainer lastLog;
 
         [BackgroundDependencyLoader]
-        private void load(DiscordClient client)
+        private void load()
         {
             Child = messageContent = new FillFlowContainer
             {
@@ -28,11 +28,11 @@ namespace MusicSharp.Game.Overlays.Logging
 
         public void AddLog(LogMessage log)
         {
-            if (lastLog == null || (DateTime.Now - lastLog.Message.CreatedTime).Seconds > 420)
+            if (lastLog == null || (DateTime.Now - lastLog.Message.CreatedTime).Seconds > 420 || lastLog.Message.Author != log.Author)
             {
                 messageContent.Add(lastLog = new LogLineHeader(log)
                 {
-                    Margin = new MarginPadding { Top = lastLog == null ? 0 : 28 }
+                    Margin = new MarginPadding { Top = lastLog == null ? 0 : 24 }
                 });
             }
             else
