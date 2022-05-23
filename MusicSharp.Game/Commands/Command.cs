@@ -25,7 +25,7 @@ namespace MusicSharp.Game.Commands
         /// <summary>
         /// 새로운 객체를 만듭니다.
         /// </summary>
-        public Command()
+        protected Command()
         {
             base.Name = Name;
             base.Description = Description;

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Discord;
+using Discord.WebSocket;
 
 namespace MusicSharp.Game.Commands
 {
@@ -11,6 +12,8 @@ namespace MusicSharp.Game.Commands
             {
                 new CommandInfo(),
                 new CommandTestOptions(),
+                new CommmandJoin(),
+                new CommandLeave(),
             };
         }
 

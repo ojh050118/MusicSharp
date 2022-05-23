@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord;
+using Discord.Commands;
 using Discord.WebSocket;
 using MusicSharp.Game.Commands;
 using MusicSharp.Game.Configuration;
@@ -35,9 +36,9 @@ namespace MusicSharp.Game.Online
 
         public DiscordClient()
         {
+            commands = new CommandStore();
             discordThread = createDiscordClientThread();
             IsRunning = new BindableBool(false);
-            commands = new CommandStore();
         }
 
         [BackgroundDependencyLoader]
@@ -116,7 +117,7 @@ namespace MusicSharp.Game.Online
                         var guild = client.GetGuild(guildId);
                         await guild.CreateApplicationCommandAsync(buildedCommand);
                     }
-                }    
+                }
             }
 
             await client.BulkOverwriteGlobalApplicationCommandsAsync(appCommandProperties.ToArray());
@@ -130,15 +131,17 @@ namespace MusicSharp.Game.Online
             return Task.CompletedTask;
         }
 
-        private async Task handleSlashCommand(SocketSlashCommand command)
+        private Task handleSlashCommand(SocketSlashCommand command)
         {
             var cmd = commands.GetCommands().FirstOrDefault(c => c.Name == command.CommandName);
 
             if (cmd != null)
-                await cmd.ExecutedCommand(command);
+                Task.Run(async () => await cmd.ExecutedCommand(command));
 
             Logger.Log($"Used {command.User.Username}#{command.User.Discriminator} /{command.CommandName}");
             OnCommandExecuted?.Invoke(command);
+
+            return Task.CompletedTask;
         }
 
         private Task onClientLogReceived(LogMessage log)
